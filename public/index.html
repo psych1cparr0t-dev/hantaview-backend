@@ -86,6 +86,31 @@
     border-left: 3px solid #20c9c9;
     padding-left: 8px;
   }
+
+  .section-subtitle {
+    font-size: 10px;
+    color: #5a7878;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    display: block;
+    margin-top: 3px;
+    font-style: italic;
+  }
+
+  .term-gloss {
+    color: #4a7070;
+    font-size: 10px;
+  }
+
+  .tab-footer {
+    border-top: 1px solid rgba(32, 201, 201, 0.08);
+    margin-top: 20px;
+    padding: 10px 0 6px;
+    font-size: 10px;
+    color: #4a6060;
+    line-height: 1.8;
+  }
   
   .stat-card {
     background: rgba(32, 201, 201, 0.08);
@@ -271,7 +296,7 @@
     </div>
     
     <div class="tab-content active" id="surveillance">
-      <div class="section-title">Global Overview</div>
+      <div class="section-title">Global Overview<span class="section-subtitle">Active locations and confirmed case totals, updated each time data loads</span></div>
       <div class="stat-card">
         <div class="stat-value" id="total-confirmed">Loading</div>
         <div class="stat-label">Confirmed cases (2026 YTD)</div>
@@ -282,20 +307,24 @@
       </div>
       
       <div class="info-box">
-        <strong>Epidemiological context:</strong> Hantavirus pulmonary syndrome (HPS) and hemorrhagic fever with renal syndrome (HFRS) together account for an estimated 150,000–200,000 hospitalizations annually worldwide (WHO, 2023). Case fatality ratios vary markedly by species: <em>Sin Nombre virus</em> (SNV) ~36%; <em>Andes virus</em> (ANDV) ~25–35%; <em>Puumala virus</em> (PUUV) &lt;1%; <em>Hantaan virus</em> (HTNV) 1–15%. No licensed vaccine exists for any hantavirus species outside of limited East Asian markets.
+        <strong>Epidemiological context:</strong> Hantavirus pulmonary syndrome (HPS) and hemorrhagic fever with renal syndrome (HFRS) together account for an estimated 150,000–200,000 hospitalizations annually worldwide (WHO, 2023). Case fatality ratios <span class="term-gloss">(CFR — the proportion of confirmed cases that result in death)</span> vary markedly by species: <em>Sin Nombre virus</em> (SNV) ~36%; <em>Andes virus</em> (ANDV) ~25–35%; <em>Puumala virus</em> (PUUV) &lt;1%; <em>Hantaan virus</em> (HTNV) 1–15%. No licensed vaccine exists for any hantavirus species outside of limited East Asian markets.
       </div>
 
-      <div class="section-title">Data Sources &amp; Methodology</div>
+      <div class="section-title">Data Sources &amp; Methodology<span class="section-subtitle">Where the numbers come from and how they are processed</span></div>
       <div class="info-box">
-        <strong>CDC NNDSS / Socrata API</strong> — Dataset <code style="color:#20c9c9;">tfcp-ufzp</code>. State-level HPS case counts extracted from the National Notifiable Diseases Surveillance System. Rows filtered to <code style="color:#20c9c9;">hantavirus_pulmonary_syndrome &gt; 0</code>; most-recent week retained per geographic area to suppress double-counting. Most recent public release: 2022 annual data.<br><br>
-        <strong>WHO Disease Outbreak News</strong> — General news RSS feed (<code style="color:#20c9c9;">who.int/rss-feeds/news-english.xml</code>). Items screened for hantavirus-related keywords; structured fields extracted via xml2js. DON-specific feed deprecated 2023.<br><br>
+        <strong>CDC NNDSS / Socrata API</strong> — Dataset <code style="color:#20c9c9;">tfcp-ufzp</code>. State-level HPS case counts extracted from the National Notifiable Diseases Surveillance System <span class="term-gloss">(NNDSS — the US mandatory reporting framework for diseases of public health significance)</span>. Rows filtered to <code style="color:#20c9c9;">hantavirus_pulmonary_syndrome &gt; 0</code>; most-recent week retained per geographic area to suppress double-counting. Most recent public release: 2022 annual data.<br><br>
+        <strong>WHO Disease Outbreak News</strong> — General news RSS feed (<code style="color:#20c9c9;">who.int/rss-feeds/news-english.xml</code>). Items screened for hantavirus-related keywords; structured fields extracted via xml2js. DON-specific feed <span class="term-gloss">(DON — Disease Outbreak News, WHO's formal channel for notifying member states of acute public health events)</span> deprecated 2023.<br><br>
         <strong>ECDC</strong> — Annual Epidemiological Report 2022 aggregate counts and MV Hondius 2026 epidemiological update. ECDC surveillance pages are JavaScript-rendered (Drupal/React Atlas); structured data sourced from published PDF reports and official press releases. Reference data is static pending availability of a machine-readable API.
       </div>
       
-      <div class="section-title">Recent Cases (2026)</div>
+      <div class="section-title">Recent Cases (2026)<span class="section-subtitle">Most recent reported cases across all sources, newest first</span></div>
       <div id="case-list"></div>
+
+      <div class="tab-footer">
+        <strong style="color: #507878;">Abbreviations —</strong> HPS: hantavirus pulmonary syndrome &nbsp;·&nbsp; HFRS: haemorrhagic fever with renal syndrome &nbsp;·&nbsp; CFR: case fatality ratio &nbsp;·&nbsp; NNDSS: National Notifiable Diseases Surveillance System &nbsp;·&nbsp; AER: Annual Epidemiological Report &nbsp;·&nbsp; DON: Disease Outbreak News &nbsp;·&nbsp; SNV / ANDV / PUUV / HTNV: hantavirus species identifiers
+      </div>
     </div>
-    
+
     <div class="tab-content" id="outbreak">
       <div class="alert-box">
         <strong>MV Hondius — Andes Virus Cluster</strong> — May 2026<br>
@@ -317,22 +346,22 @@
         </div>
       </div>
 
-      <div class="section-title">Virological Characteristics</div>
+      <div class="section-title">Virological Characteristics<span class="section-subtitle">What the pathogen is — species, genome structure, and transmission behaviour</span></div>
       <div class="info-box">
-        <strong>Aetiological agent:</strong> <em>Andes orthohantavirus</em> (ANDV), family <em>Hantaviridae</em>, genus <em>Orthohantavirus</em>. Tri-segmented negative-sense ssRNA genome (S, M, L segments). Natural reservoir: <em>Oligoryzomys longicaudatus</em> (long-tailed pygmy rice rat), endemic to Andean and Patagonian corridors of Argentina and Chile.<br><br>
-        ANDV is the only hantavirus species with documented, laboratory-confirmed human-to-human transmission (cluster studies, Argentina 1996–2011; CFR in person-to-person clusters: ~23%). Secondary transmission requires close, prolonged mucosal or percutaneous contact with infectious blood or secretions. No nosocomial aerosol transmission has been documented.
+        <strong>Aetiological agent:</strong> <em>Andes orthohantavirus</em> (ANDV), family <em>Hantaviridae</em>, genus <em>Orthohantavirus</em>. Tri-segmented negative-sense ssRNA <span class="term-gloss">(single-stranded RNA — genetic material encoded in reverse-complement form; requires replication before expression)</span> genome (S, M, L segments encoding nucleocapsid, glycoproteins, and RNA polymerase). Natural reservoir: <em>Oligoryzomys longicaudatus</em> (long-tailed pygmy rice rat), endemic to Andean and Patagonian corridors of Argentina and Chile.<br><br>
+        ANDV is the only hantavirus species with documented, laboratory-confirmed human-to-human transmission (cluster studies, Argentina 1996–2011; CFR in person-to-person clusters: ~23%). Secondary transmission requires close, prolonged mucosal or percutaneous <span class="term-gloss">(through broken or abraded skin)</span> contact with infectious blood or secretions. No nosocomial <span class="term-gloss">(hospital-acquired)</span> aerosol transmission has been documented.
       </div>
 
-      <div class="section-title">Clinical &amp; Epidemiological Summary</div>
+      <div class="section-title">Clinical &amp; Epidemiological Summary<span class="section-subtitle">What happened, who got sick, and the formal case breakdown</span></div>
       <div class="info-box">
-        Index cases reported 2–4 May 2026 aboard Dutch-flagged expedition vessel MV Hondius (IMO 9782568), following a land excursion in Río Negro Province, Argentina (ANDV-endemic zone). Clinical presentation consistent with hantavirus cardiopulmonary syndrome (HCPS): febrile prodrome followed by non-cardiogenic pulmonary oedema and cardiovascular compromise.<br><br>
+        Index cases reported 2–4 May 2026 aboard Dutch-flagged expedition vessel MV Hondius (IMO 9782568), following a land excursion in Río Negro Province, Argentina (ANDV-endemic zone). Clinical presentation consistent with hantavirus cardiopulmonary syndrome <span class="term-gloss">(HCPS — severe lung and circulatory failure; the South American presentation of hantavirus disease)</span>: febrile prodrome <span class="term-gloss">(prodrome — early symptom phase preceding the defining illness)</span> followed by non-cardiogenic pulmonary oedema <span class="term-gloss">(fluid in the lungs caused by vessel leakage, not heart failure)</span> and cardiovascular compromise.<br><br>
         <strong>Case classification (WHO criteria):</strong><br>
-        <em>Confirmed</em> (n=8): RT-PCR positive or four-fold rise in IgG titre.<br>
-        <em>Probable</em> (n=2): Compatible clinical syndrome + epidemiological link; serology pending or inconclusive.<br><br>
+        <em>Confirmed</em> (n=8): RT-PCR <span class="term-gloss">(reverse transcription PCR — detects viral RNA in blood or tissue)</span> positive or four-fold rise in IgG titre <span class="term-gloss">(IgG — antibody class indicating recent or resolving infection; a fourfold titre rise confirms active disease)</span>.<br>
+        <em>Probable</em> (n=2): Compatible clinical syndrome + epidemiological link; serology <span class="term-gloss">(blood-based antibody testing)</span> pending or inconclusive.<br><br>
         Vessel carried 147 passengers and crew. Following evacuation, cases were repatriated across 7 countries; 45-day monitoring period applied to all contacts.
       </div>
 
-      <div class="section-title">Public Health Response</div>
+      <div class="section-title">Public Health Response<span class="section-subtitle">Containment and monitoring actions taken by international health agencies</span></div>
       <div class="case-item">
         <strong style="color: #20c9c9;">Medical Evacuation</strong><br>
         <span class="case-details">Critical cases airlifted to level-III facilities (Cape Town, Amsterdam); mechanical ventilation and vasopressor support initiated</span>
@@ -350,20 +379,24 @@
         <span class="case-details">Global population risk assessed as LOW. Sustained community transmission not observed; no secondary cases identified outside vessel contacts</span>
       </div>
 
-      <div class="section-title">Infection Prevention Notes</div>
+      <div class="section-title">Infection Prevention Notes<span class="section-subtitle">Handling precautions for clinical staff, laboratory workers, and close contacts</span></div>
       <div class="info-box">
-        Contact and droplet precautions are recommended for clinical management of suspected ANDV cases. Standard precautions (gloves, apron) are sufficient for indirect contact. Specimens should be handled at BSL-2 with BSL-3 practices; live virus work requires BSL-3 containment. Ribavirin has shown in-vitro activity against ANDV; clinical evidence for benefit in HCPS remains limited to observational data.
-      </div>
-    </div>
-    
-    <div class="tab-content" id="prepare">
-      <div class="section-title">Aetiology &amp; Natural History</div>
-      <div class="info-box">
-        Hantaviruses (family <em>Hantaviridae</em>) are zoonotic RNA viruses maintained in wild rodent reservoirs. Each species co-evolved with a specific host: <em>Sin Nombre orthohantavirus</em> (SNV) — <em>Peromyscus maniculatus</em> (deer mouse), western North America; <em>Andes orthohantavirus</em> (ANDV) — <em>Oligoryzomys longicaudatus</em>, Andean/Patagonian South America; <em>Seoul orthohantavirus</em> (SEOV) — <em>Rattus norvegicus</em> (Norway rat), cosmopolitan distribution; <em>Puumala orthohantavirus</em> (PUUV) — <em>Myodes glareolus</em> (bank vole), northern Europe.<br><br>
-        Reservoir hosts sustain persistent, largely asymptomatic infection. Viral shedding occurs in urine, feces, and saliva. Human infection is a spillover event — not part of the natural transmission cycle. Estimated basic reproduction number (R₀) for ANDV in documented person-to-person clusters: 1.1–1.2, insufficient to sustain epidemic chains without continuous zoonotic amplification.
+        Contact and droplet precautions are recommended for clinical management of suspected ANDV cases. Standard precautions (gloves, apron) are sufficient for indirect contact. Specimens should be handled at BSL-2 with BSL-3 practices <span class="term-gloss">(biosafety levels — a 1–4 scale of lab containment; BSL-2 covers moderate-risk agents, BSL-3 adds respiratory protection for pathogens transmissible by aerosol)</span>; live virus work requires BSL-3 containment. Ribavirin <span class="term-gloss">(a broad-spectrum antiviral nucleoside analogue that inhibits viral RNA replication)</span> has shown in-vitro activity against ANDV; clinical evidence for benefit in HCPS remains limited to observational data.
       </div>
 
-      <div class="section-title">Routes of Transmission</div>
+      <div class="tab-footer">
+        <strong style="color: #507878;">Abbreviations —</strong> ANDV: Andes orthohantavirus &nbsp;·&nbsp; HCPS: hantavirus cardiopulmonary syndrome &nbsp;·&nbsp; IHR: International Health Regulations &nbsp;·&nbsp; RT-PCR: reverse transcription polymerase chain reaction &nbsp;·&nbsp; IgG: immunoglobulin G (antibody confirming prior/active infection) &nbsp;·&nbsp; BSL: biosafety level &nbsp;·&nbsp; CFR: case fatality ratio &nbsp;·&nbsp; ssRNA: single-stranded RNA &nbsp;·&nbsp; IMO: International Maritime Organization vessel identifier
+      </div>
+    </div>
+
+    <div class="tab-content" id="prepare">
+      <div class="section-title">Aetiology &amp; Natural History<span class="section-subtitle">What causes hantavirus disease and how it persists in animal populations</span></div>
+      <div class="info-box">
+        Hantaviruses (family <em>Hantaviridae</em>) are zoonotic <span class="term-gloss">(of animal origin — naturally maintained in non-human hosts; humans are incidental dead-end hosts)</span> RNA viruses maintained in wild rodent reservoirs. Each species co-evolved with a specific host: <em>Sin Nombre orthohantavirus</em> (SNV) — <em>Peromyscus maniculatus</em> (deer mouse), western North America; <em>Andes orthohantavirus</em> (ANDV) — <em>Oligoryzomys longicaudatus</em>, Andean/Patagonian South America; <em>Seoul orthohantavirus</em> (SEOV) — <em>Rattus norvegicus</em> (Norway rat), cosmopolitan distribution; <em>Puumala orthohantavirus</em> (PUUV) — <em>Myodes glareolus</em> (bank vole), northern Europe.<br><br>
+        Reservoir hosts sustain persistent, largely asymptomatic infection. Viral shedding <span class="term-gloss">(continuous release of infectious virus particles into bodily secretions by the reservoir host)</span> occurs in urine, feces, and saliva. Human infection is a spillover event — not part of the natural transmission cycle. Estimated basic reproduction number (R₀) <span class="term-gloss">(R₀ — average number of new infections caused by one case in a fully susceptible population; values below 1.0 mean chains die out naturally)</span> for ANDV in documented person-to-person clusters: 1.1–1.2, insufficient to sustain epidemic chains without continuous zoonotic amplification.
+      </div>
+
+      <div class="section-title">Routes of Transmission<span class="section-subtitle">How the virus moves from animal reservoirs into humans</span></div>
       <div class="transmission-flow">
         <div class="flow-step">
           <div class="step-number">1</div>
@@ -384,27 +417,27 @@
       </div>
 
       <div class="info-box">
-        <strong>Transmission not documented by:</strong> casual contact, airborne spread in normal ventilation conditions, fomites, arthropod vectors, or consumption of cooked food. Hantavirus does not possess the receptor-binding or environmental stability characteristics associated with airborne pathogens (e.g., SARS-CoV-2, <em>M. tuberculosis</em>).
+        <strong>Transmission not documented by:</strong> casual contact, airborne spread in normal ventilation conditions, fomites <span class="term-gloss">(inanimate objects or surfaces that carry infectious agents)</span>, arthropod vectors, or consumption of cooked food. Hantavirus does not possess the receptor-binding or environmental stability characteristics associated with airborne pathogens (e.g., SARS-CoV-2, <em>M. tuberculosis</em>).
       </div>
 
-      <div class="section-title">Clinical Presentation (HPS/HCPS)</div>
+      <div class="section-title">Clinical Presentation (HPS/HCPS)<span class="section-subtitle">How the illness progresses, stage by stage</span></div>
       <div class="case-item">
-        <strong style="color: #20c9c9;">Phase 1 — Prodromal (days 1–5)</strong><br>
-        <span class="case-details">Fever (38–40°C), myalgia, headache, malaise, nausea/vomiting. Thrombocytopaenia and elevated haematocrit may be detected. Clinically indistinguishable from influenza-like illness.</span>
+        <strong style="color: #20c9c9;">Phase 1 — Prodromal (days 1–5)</strong> <span class="term-gloss">— early warning stage before the defining illness appears</span><br>
+        <span class="case-details">Fever (38–40°C), myalgia <span class="term-gloss">(muscle pain)</span>, headache, malaise, nausea/vomiting. Thrombocytopaenia <span class="term-gloss">(low platelet count — impairs normal blood clotting)</span> and elevated haematocrit <span class="term-gloss">(rising red blood cell fraction, a sign that fluid is leaking out of blood vessels)</span> may be detected. Clinically indistinguishable from influenza-like illness.</span>
       </div>
       <div class="case-item">
-        <strong style="color: #e85a30;">Phase 2 — Cardiopulmonary (days 5–10)</strong><br>
-        <span class="case-details">Rapid onset non-cardiogenic pulmonary oedema; hypoxia requiring supplemental oxygen or mechanical ventilation; cardiogenic shock in severe cases. Radiograph: bilateral interstitial infiltrates. Marked thrombocytopaenia, elevated LDH, haemoconcentration.</span>
+        <strong style="color: #e85a30;">Phase 2 — Cardiopulmonary (days 5–10)</strong> <span class="term-gloss">— critical stage of lung and circulatory failure</span><br>
+        <span class="case-details">Rapid onset non-cardiogenic pulmonary oedema <span class="term-gloss">(fluid flooding the lungs due to vessel leakage — not caused by heart failure)</span>; hypoxia <span class="term-gloss">(dangerously low blood-oxygen levels)</span> requiring supplemental oxygen or mechanical ventilation; cardiogenic shock in severe cases. Radiograph: bilateral interstitial infiltrates <span class="term-gloss">(shadowing across both lungs on chest X-ray, indicating fluid infiltration)</span>. Marked thrombocytopaenia, elevated LDH <span class="term-gloss">(lactate dehydrogenase — a blood enzyme that rises sharply with widespread cell damage)</span>, haemoconcentration <span class="term-gloss">(thickening of the blood as plasma leaks into tissues)</span>.</span>
       </div>
       <div class="case-item">
-        <strong style="color: #20c9c9;">Phase 3 — Convalescent</strong><br>
-        <span class="case-details">Rapid diuresis and clinical improvement in survivors. Full recovery may take weeks to months; persistent fatigue and reduced exercise tolerance reported. No chronic carrier state documented.</span>
+        <strong style="color: #20c9c9;">Phase 3 — Convalescent</strong> <span class="term-gloss">— recovery stage</span><br>
+        <span class="case-details">Rapid diuresis <span class="term-gloss">(increased urine output as accumulated fluid is cleared from the body)</span> and clinical improvement in survivors. Full recovery may take weeks to months; persistent fatigue and reduced exercise tolerance reported. No chronic carrier state <span class="term-gloss">(long-term asymptomatic infection capable of transmitting to others)</span> documented.</span>
       </div>
       <div class="info-box" style="margin-top: 10px;">
-        <strong>Management:</strong> No approved specific antiviral therapy for HPS. Treatment is supportive — early ICU admission, lung-protective ventilation, vasopressors for haemodynamic support, judicious fluid management. Ribavirin has demonstrated in-vitro activity against multiple hantavirus species; clinical benefit in established HPS remains unproven. Extracorporeal membrane oxygenation (ECMO) has been used in severe refractory cases.
+        <strong>Management:</strong> No approved specific antiviral therapy for HPS. Treatment is supportive — early ICU admission, lung-protective ventilation <span class="term-gloss">(low-volume, low-pressure ventilator settings that minimise further injury to already inflamed lung tissue)</span>, vasopressors <span class="term-gloss">(drugs that constrict blood vessels to raise dangerously low blood pressure)</span> for haemodynamic support, judicious fluid management. Ribavirin <span class="term-gloss">(a broad-spectrum antiviral that blocks viral RNA replication)</span> has demonstrated in-vitro activity against multiple hantavirus species; clinical benefit in established HPS remains unproven. Extracorporeal membrane oxygenation (ECMO) <span class="term-gloss">(a machine that temporarily takes over the work of the lungs and heart when they can no longer sustain life)</span> has been used in severe refractory cases.
       </div>
 
-      <div class="section-title">Exposure Prevention</div>
+      <div class="section-title">Exposure Prevention<span class="section-subtitle">Practical steps to reduce risk of infection</span></div>
 
       <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">Environmental Controls</div>
       <div class="diagram-grid">
@@ -474,9 +507,13 @@
         </div>
       </div>
 
-      <div class="section-title">Clinical Decision Point</div>
+      <div class="section-title">Clinical Decision Point<span class="section-subtitle">When and how to seek medical evaluation after a possible exposure</span></div>
       <div class="info-box">
-        Seek urgent medical assessment if fever, myalgia, or dyspnoea develops within 45 days of potential rodent exposure or contact with a confirmed hantavirus case. Inform the treating clinician of the exposure history — early recognition is critical, as respiratory deterioration can be precipitous. There is no reliable point-of-care test; diagnosis requires PCR or serological confirmation at a reference laboratory.
+        Seek urgent medical assessment if fever, myalgia, or dyspnoea <span class="term-gloss">(difficulty breathing)</span> develops within 45 days of potential rodent exposure or contact with a confirmed hantavirus case. Inform the treating clinician of the exposure history — early recognition is critical, as respiratory deterioration can be precipitous <span class="term-gloss">(abrupt and severe — patients can decline from mild symptoms to respiratory failure within hours)</span>. There is no reliable point-of-care test <span class="term-gloss">(a rapid bedside test — hantavirus requires specialist laboratory analysis)</span>; diagnosis requires PCR <span class="term-gloss">(polymerase chain reaction — detects viral genetic material in blood)</span> or serological <span class="term-gloss">(blood antibody testing)</span> confirmation at a reference laboratory.
+      </div>
+
+      <div class="tab-footer">
+        <strong style="color: #507878;">Abbreviations —</strong> HPS: hantavirus pulmonary syndrome &nbsp;·&nbsp; HCPS: hantavirus cardiopulmonary syndrome &nbsp;·&nbsp; R₀: basic reproduction number &nbsp;·&nbsp; SNV / ANDV / SEOV / PUUV: hantavirus species identifiers &nbsp;·&nbsp; LDH: lactate dehydrogenase &nbsp;·&nbsp; ECMO: extracorporeal membrane oxygenation &nbsp;·&nbsp; ICU: intensive care unit &nbsp;·&nbsp; BSL: biosafety level &nbsp;·&nbsp; PPE: personal protective equipment &nbsp;·&nbsp; PCR: polymerase chain reaction
       </div>
     </div>
   </div>
