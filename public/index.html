@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hantaview - Hantavirus Surveillance & Education</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+    background: #0a0e27;
+    color: #e0e0e0;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .app-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  #map {
+    flex: 1;
+    position: relative;
+  }
+  
+  .sidebar {
+    width: 420px;
+    background: rgba(10, 14, 39, 0.98);
+    border-left: 1px solid rgba(32, 201, 201, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .tab-buttons {
+    display: flex;
+    border-bottom: 1px solid rgba(32, 201, 201, 0.2);
+    background: rgba(0, 0, 0, 0.3);
+  }
+  
+  .tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    color: #888;
+    cursor: pointer;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  
+  .tab-btn.active {
+    color: #20c9c9;
+    border-bottom-color: #20c9c9;
+    background: rgba(32, 201, 201, 0.05);
+  }
+  
+  .tab-btn:hover {
+    color: #20c9c9;
+  }
+  
+  .tab-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: none;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+  
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #20c9c9;
+    margin: 16px 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-left: 3px solid #20c9c9;
+    padding-left: 8px;
+  }
+  
+  .stat-card {
+    background: rgba(32, 201, 201, 0.08);
+    border: 1px solid rgba(32, 201, 201, 0.2);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #20c9c9;
+  }
+  
+  .stat-label {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+  }
+  
+  .alert-box {
+    background: rgba(232, 90, 48, 0.12);
+    border-left: 3px solid #e85a30;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #e0a090;
+  }
+  
+  .info-box {
+    background: rgba(32, 100, 201, 0.08);
+    border-left: 3px solid #20c9c9;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #a0d0d0;
+  }
+  
+  .reassurance-box {
+    background: rgba(76, 160, 102, 0.1);
+    border-left: 3px solid #4ca066;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #90c0a0;
+  }
+  
+  .case-item {
+    background: rgba(32, 201, 201, 0.06);
+    border: 1px solid rgba(32, 201, 201, 0.15);
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 8px;
+    font-size: 11px;
+  }
+  
+  .case-location {
+    color: #20c9c9;
+    font-weight: 600;
+  }
+  
+  .case-details {
+    color: #888;
+    margin-top: 4px;
+  }
+  
+  .diagram-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0;
+  }
+  
+  .diagram-box {
+    background: rgba(32, 201, 201, 0.06);
+    border: 1px solid rgba(32, 201, 201, 0.15);
+    border-radius: 6px;
+    padding: 12px;
+    text-align: center;
+    font-size: 11px;
+  }
+  
+  .diagram-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  
+  .diagram-label {
+    color: #a0c0c0;
+    line-height: 1.4;
+  }
+  
+  .transmission-flow {
+    background: rgba(32, 201, 201, 0.06);
+    border: 1px solid rgba(32, 201, 201, 0.15);
+    border-radius: 6px;
+    padding: 12px;
+    margin: 12px 0;
+    font-size: 11px;
+    line-height: 1.8;
+  }
+  
+  .flow-step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .step-number {
+    background: rgba(32, 201, 201, 0.3);
+    color: #20c9c9;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 8px;
+    flex-shrink: 0;
+    font-size: 10px;
+  }
+  
+  .step-text {
+    color: #a0d0d0;
+  }
+  
+  .ppe-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  
+  .ppe-item {
+    background: rgba(32, 201, 201, 0.06);
+    border: 1px solid rgba(32, 201, 201, 0.15);
+    border-radius: 4px;
+    padding: 8px;
+    text-align: center;
+    font-size: 10px;
+  }
+  
+  .ppe-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+    display: block;
+  }
+  
+  .ppe-name {
+    color: #a0c0c0;
+    font-weight: 500;
+  }
+  
+  .leaflet-control-attribution { display: none; }
+  .leaflet-popup-content-wrapper { background-color: rgba(10, 14, 39, 0.95) !important; border-radius: 6px !important; }
+  .leaflet-popup-tip { background-color: rgba(10, 14, 39, 0.95) !important; }
+  
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: rgba(32, 201, 201, 0.05); }
+  ::-webkit-scrollbar-thumb { background: rgba(32, 201, 201, 0.3); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(32, 201, 201, 0.5); }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <div id="map"></div>
+  
+  <div class="sidebar">
+    <div class="tab-buttons">
+      <button class="tab-btn active" data-tab="surveillance">Surveillance</button>
+      <button class="tab-btn" data-tab="outbreak">Outbreak Alert</button>
+      <button class="tab-btn" data-tab="prepare">How to Prepare</button>
+    </div>
+    
+    <div class="tab-content active" id="surveillance">
+      <div class="section-title">Global Overview</div>
+      <div class="stat-card">
+        <div class="stat-value" id="total-confirmed">Loading</div>
+        <div class="stat-label">Confirmed cases (2026 YTD)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="active-locations">0</div>
+        <div class="stat-label">Active locations</div>
+      </div>
+      
+      <div class="reassurance-box">
+        ✓ <strong>Low global incidence:</strong> Fewer than 1,000 annual cases worldwide. Proper precautions virtually eliminate risk.
+      </div>
+      
+      <div class="section-title">Data Sources</div>
+      <div class="info-box">
+        • CDC Hantavirus Surveillance<br>
+        • WHO Disease Outbreak News<br>
+        • ECDC Outbreak Assessments<br>
+        • National Health Agencies<br><br>
+        <span style="font-size: 10px; color: #666;">Note: This dashboard integrates real outbreak data (MV Hondius, May 2026). Historical case data shown is representative/illustrative. For verified current cases, visit CDC.gov or WHO.int directly.</span>
+      </div>
+      
+      <div class="section-title">Recent Cases (2026)</div>
+      <div id="case-list"></div>
+    </div>
+    
+    <div class="tab-content" id="outbreak">
+      <div class="alert-box">
+        <strong>MV Hondius Outbreak</strong> — May 2026<br>
+        Status: Controlled, all passengers evacuated
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-value">11</div>
+        <div class="stat-label">Total cases reported</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">3</div>
+        <div class="stat-label">Deaths</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">Andes Virus</div>
+        <div class="stat-label">Identified strain</div>
+      </div>
+      
+      <div class="section-title">What Happened</div>
+      <div class="info-box">
+        Dutch-flagged cruise ship MV Hondius reported severe respiratory illness cases May 2–4, 2026. Passengers had visited Argentina (where Andes virus is endemic) before boarding. Eight confirmed, two probable, one inconclusive case. Andes virus is the only hantavirus capable of limited human-to-human transmission via close, prolonged contact.
+      </div>
+      
+      <div class="section-title">Response Actions</div>
+      <div class="case-item">
+        <strong style="color: #20c9c9;">Medical Evacuation</strong><br>
+        <span class="case-details">3 patients airlifted to medical facilities (South Africa, Netherlands); ICU care provided</span>
+      </div>
+      <div class="case-item">
+        <strong style="color: #20c9c9;">Full Repatriation</strong><br>
+        <span class="case-details">All 147 remaining passengers & crew evacuated to 12 countries; quarantine/monitoring in place</span>
+      </div>
+      <div class="case-item">
+        <strong style="color: #20c9c9;">Contact Tracing</strong><br>
+        <span class="case-details">WHO, CDC, ECDC coordinated international contact tracing; passengers monitored for 45 days</span>
+      </div>
+      <div class="case-item">
+        <strong style="color: #20c9c9;">Risk Assessment</strong><br>
+        <span class="case-details">WHO assessed risk to global population as LOW; transmission requires close sustained contact</span>
+      </div>
+      
+      <div class="section-title">Key Facts</div>
+      <div class="info-box">
+        • Andes virus: only hantavirus with documented human-to-human spread<br>
+        • Transmission: close, prolonged contact only—NOT airborne like COVID-19<br>
+        • Primary source: rodent exposure (urine, feces, saliva)<br>
+        • Fatality rate: 38% (with supportive care)<br>
+        • Incubation: 1–4 weeks
+      </div>
+    </div>
+    
+    <div class="tab-content" id="prepare">
+      <div class="section-title">Disease Origin</div>
+      <div class="info-box">
+        Hantaviruses are found in rodent populations worldwide. Each virus is associated with specific rodent species: <strong>Sin Nombre</strong> (deer mice, western North America—high-risk for campers, farmers), <strong>Seoul</strong> (Norway rats, urban areas worldwide—city dwellers), <strong>Andes</strong> (pygmy rice rats, South America—agricultural zones), and others in Europe and Asia. Humans become infected through direct contact with infected rodent droppings, urine, or saliva—or by inhaling aerosols from contaminated surfaces. The virus has been circulating in rodents for thousands of years without causing humans much trouble, until we started camping, farming, and storing grain in rodent-infested spaces.
+      </div>
+      
+      <div class="section-title">Transmissibility (NOT Airborne)</div>
+      <div class="transmission-flow">
+        <div class="flow-step">
+          <div class="step-number">1</div>
+          <div class="step-text"><strong>Rodent contact</strong> — Handling infected rodents or contaminated materials (droppings, nesting materials)</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-number">2</div>
+          <div class="step-text"><strong>Inhalation</strong> — Breathing dust from rodent feces in poorly ventilated spaces (NOT person-to-person through coughing)</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-number">3</div>
+          <div class="step-text"><strong>Mucosal exposure</strong> — Touching face/mouth after handling contaminated materials</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-number">4</div>
+          <div class="step-text"><strong>Rare human transmission</strong> — Andes virus only; requires very close, prolonged contact with infected blood/body fluids</div>
+        </div>
+      </div>
+      
+      <div class="reassurance-box">
+        🛡️ <strong>Why it's NOT like COVID:</strong> Hantavirus is NOT aerosolized. Normal casual contact (sitting near someone, breathing same air in normal spaces) poses ZERO risk. You cannot catch it from a cough or sneeze. Risk requires either rodent contact or, rarely, very close contact with an infected person's blood/fluids.
+      </div>
+      
+      <div class="section-title">Why It Won't Go Pandemic</div>
+      <div class="info-box">
+        <strong style="color: #20c9c9;">1. Stable Virus</strong><br>
+        Andes virus (the only human-transmissible strain) showed no significant mutations over 22 years of outbreaks. It's evolutionarily locked in—won't suddenly become "airborne" or more contagious.
+      </div>
+      <div class="info-box">
+        <strong style="color: #20c9c9;">2. Dead-End Host</strong><br>
+        Hantavirus evolved in rodents over millennia. Human infection is a biological accident. The virus doesn't "want" to infect humans—it's poorly adapted to us and spreads inefficiently, even in close quarters.
+      </div>
+      <div class="info-box">
+        <strong style="color: #20c9c9;">3. Spreads Itself to Death</strong><br>
+        The virus is <em>too</em> deadly. It rapidly incapacitates or kills hosts before they can spread it widely—an evolutionary trap. (The MV Hondius outbreak, confined in a ship with 147 people, only produced 8 confirmed cases. That's how weak human transmission is.)
+      </div>
+      <div class="info-box">
+        <strong style="color: #20c9c9;">4. No Airborne Adaptation</strong><br>
+        Hantavirus lacks the genetic structure to become airborne like COVID or influenza. Respiratory transmission requires specific viral proteins and aerosol stability—hantavirus doesn't have this architecture.
+      </div>
+      
+      <div class="section-title">Prevention Strategy</div>
+      
+      <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">Environmental Control</div>
+      <div class="diagram-grid">
+        <div class="diagram-box">
+          <span class="diagram-icon">🏠</span>
+          <div class="diagram-label"><strong>Seal Entry Points</strong><br>Gaps larger than ¼" in walls, foundations, pipes</div>
+        </div>
+        <div class="diagram-box">
+          <span class="diagram-icon">🗑️</span>
+          <div class="diagram-label"><strong>Remove Food Sources</strong><br>Sealed containers; no crumbs or debris</div>
+        </div>
+        <div class="diagram-box">
+          <span class="diagram-icon">🧹</span>
+          <div class="diagram-label"><strong>Ventilation First</strong><br>Open windows before cleaning rodent areas</div>
+        </div>
+        <div class="diagram-box">
+          <span class="diagram-icon">🧼</span>
+          <div class="diagram-label"><strong>Spray & Wait</strong><br>Spray droppings with bleach (10%), wait 5 min before cleanup</div>
+        </div>
+      </div>
+      
+      <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">Personal Protective Equipment</div>
+      <div class="ppe-grid">
+        <div class="ppe-item">
+          <span class="ppe-icon">😷</span>
+          <div class="ppe-name">N95 Mask</div>
+        </div>
+        <div class="ppe-item">
+          <span class="ppe-icon">🧤</span>
+          <div class="ppe-name">Gloves (Nitrile)</div>
+        </div>
+        <div class="ppe-item">
+          <span class="ppe-icon">👕</span>
+          <div class="ppe-name">Long Sleeves</div>
+        </div>
+        <div class="ppe-item">
+          <span class="ppe-icon">🦶</span>
+          <div class="ppe-name">Closed-Toe Shoes</div>
+        </div>
+        <div class="ppe-item">
+          <span class="ppe-icon">🥽</span>
+          <div class="ppe-name">Eye Protection</div>
+        </div>
+        <div class="ppe-item">
+          <span class="ppe-icon">👒</span>
+          <div class="ppe-name">Hat/Head Cover</div>
+        </div>
+      </div>
+      
+      <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">Behavioral Practices</div>
+      <div class="diagram-grid">
+        <div class="diagram-box">
+          <span class="diagram-icon">🚫</span>
+          <div class="diagram-label"><strong>Don't Handle Rodents</strong><br>Especially if sick or dead</div>
+        </div>
+        <div class="diagram-box">
+          <span class="diagram-icon">🏕️</span>
+          <div class="diagram-label"><strong>Camp Safely</strong><br>Keep tent & food sealed; avoid rodent-infested areas</div>
+        </div>
+        <div class="diagram-box">
+          <span class="diagram-icon">🚜</span>
+          <div class="diagram-label"><strong>Farm Safety</strong><br>Stored grain is rodent magnet; use proper ventilation</div>
+        </div>
+        <div class="diagram-box">
+          <span class="diagram-icon">🔦</span>
+          <div class="diagram-label"><strong>Inspect Before Use</strong><br>Cabins, sheds, stored items—look for droppings</div>
+        </div>
+      </div>
+      
+      <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">Social Distancing (If Exposed)</div>
+      <div class="info-box">
+        Standard precautions sufficient for most situations. If caring for a confirmed hantavirus patient: droplet precautions (3-foot distance, masks) during close contact with respiratory secretions; standard precautions otherwise. Person-to-person transmission is extremely rare and only documented with Andes virus after intense, prolonged contact with blood/body fluids.
+      </div>
+      
+      <div class="section-title">Symptoms to Monitor</div>
+      <div class="case-item">
+        <strong style="color: #e85a30;">Early (1–2 weeks)</strong><br>
+        <span class="case-details">Fever, headache, muscle aches, fatigue, gastrointestinal symptoms</span>
+      </div>
+      <div class="case-item">
+        <strong style="color: #e85a30;">Late (progressive)</strong><br>
+        <span class="case-details">Cough, shortness of breath, chest tightness, rapid heartbeat</span>
+      </div>
+      
+      <div class="reassurance-box">
+        ✓ Seek medical care immediately if symptomatic after potential rodent exposure. Early treatment with supportive care (oxygen, fluids, monitoring) significantly improves survival rates.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />
+
+<script>
+const tabButtons = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabButtons.forEach(b => b.classList.remove('active'));
+    tabContents.forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+const map = L.map('map').setView([15, 0], 2);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '',
+  maxZoom: 19,
+  opacity: 0.8
+}).addTo(map);
+
+const markerGroup = L.markerClusterGroup({ maxClusterRadius: 50 });
+
+let allCases = [];
+
+// Same-origin: works on Render, localhost, or any host automatically
+const API_BASE = window.location.origin + '/api';
+
+// Strain display labels (API uses snake_case)
+const STRAIN_LABELS = {
+  sin_nombre: 'Sin Nombre',
+  seoul: 'Seoul',
+  andes: 'Andes',
+  other: 'Other',
+};
+
+// Fallback static data for when the backend is unreachable
+function getFallbackData() {
+  return [
+    { location: "Cape Town, South Africa", country: "South Africa", latitude: -33.9, longitude: 18.4, confirmed: 2, probable: 1, strain: "andes", date: "2026-05-04" },
+    { location: "Amsterdam, Netherlands", country: "Netherlands", latitude: 52.4, longitude: 4.9, confirmed: 1, probable: 1, strain: "andes", date: "2026-05-06" },
+    { location: "Barcelona, Spain", country: "Spain", latitude: 41.4, longitude: 2.2, confirmed: 1, probable: 0, strain: "andes", date: "2026-05-09" },
+    { location: "Zurich, Switzerland", country: "Switzerland", latitude: 47.4, longitude: 8.5, confirmed: 1, probable: 0, strain: "andes", date: "2026-05-08" },
+    { location: "New York, USA", country: "USA", latitude: 40.7, longitude: -74.0, confirmed: 1, probable: 0, strain: "andes", date: "2026-05-12" },
+    { location: "Vancouver, Canada", country: "Canada", latitude: 49.3, longitude: -123.1, confirmed: 1, probable: 0, strain: "andes", date: "2026-05-13" },
+    { location: "New Mexico", country: "USA", latitude: 34.5, longitude: -106.5, confirmed: 5, probable: 1, strain: "sin_nombre", date: "2026-04-15" },
+    { location: "Colorado", country: "USA", latitude: 39.0, longitude: -105.5, confirmed: 4, probable: 1, strain: "sin_nombre", date: "2026-03-20" },
+    { location: "California", country: "USA", latitude: 37.0, longitude: -120.0, confirmed: 3, probable: 0, strain: "sin_nombre", date: "2026-02-10" },
+    { location: "Utah", country: "USA", latitude: 39.0, longitude: -111.5, confirmed: 2, probable: 0, strain: "sin_nombre", date: "2026-01-25" },
+    { location: "Wyoming", country: "USA", latitude: 43.0, longitude: -107.5, confirmed: 2, probable: 1, strain: "sin_nombre", date: "2026-03-05" },
+    { location: "Seoul, South Korea", country: "South Korea", latitude: 37.5, longitude: 127.0, confirmed: 6, probable: 2, strain: "seoul", date: "2026-02-28" },
+    { location: "Busan, South Korea", country: "South Korea", latitude: 35.2, longitude: 129.0, confirmed: 3, probable: 1, strain: "seoul", date: "2026-03-15" },
+    { location: "Tokyo, Japan", country: "Japan", latitude: 35.7, longitude: 139.7, confirmed: 1, probable: 0, strain: "seoul", date: "2026-04-22" },
+    { location: "Buenos Aires, Argentina", country: "Argentina", latitude: -34.6, longitude: -58.4, confirmed: 2, probable: 1, strain: "andes", date: "2026-01-10" },
+    { location: "Mendoza, Argentina", country: "Argentina", latitude: -32.9, longitude: -68.8, confirmed: 2, probable: 0, strain: "andes", date: "2026-02-05" },
+    { location: "Punta Arenas, Chile", country: "Chile", latitude: -53.2, longitude: -70.9, confirmed: 2, probable: 1, strain: "andes", date: "2026-01-30" },
+  ];
+}
+
+async function fetchCases() {
+  try {
+    const res = await fetch(`${API_BASE}/cases?limit=200`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const { data } = await res.json();
+    return data;
+  } catch (e) {
+    console.warn('Backend unreachable, using fallback data:', e.message);
+    return getFallbackData();
+  }
+}
+
+async function fetchStats() {
+  try {
+    const res = await fetch(`${API_BASE}/stats`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const { data } = await res.json();
+    return data;
+  } catch (e) {
+    return null;
+  }
+}
+
+function strainColor(strain) {
+  return strain === 'andes' ? '#e85a30' : '#20c9c9';
+}
+
+function createMarker(caseData) {
+  const color = strainColor(caseData.strain);
+  const lat = caseData.latitude ?? caseData.lat;
+  const lng = caseData.longitude ?? caseData.lng;
+  if (lat == null || lng == null) return null;
+
+  const marker = L.marker([lat, lng], {
+    icon: L.divIcon({
+      html: `<div style="width: 12px; height: 12px; background: ${color}; border: 2px solid rgba(255,255,255,0.5); border-radius: 50%; box-shadow: 0 0 6px ${color}80;"></div>`,
+      iconSize: [12, 12]
+    })
+  });
+
+  const strainLabel = STRAIN_LABELS[caseData.strain] || caseData.strain;
+  const source = caseData.source ? ` • ${caseData.source.toUpperCase()}` : '';
+
+  marker.bindPopup(`
+    <div style="color: #e0e0e0; font-family: monospace; font-size: 11px;">
+      <div style="color: ${color}; font-weight: bold;">${caseData.location}, ${caseData.country}</div>
+      <div style="margin-top: 4px; color: #888;">
+        ${caseData.confirmed} confirmed${caseData.probable > 0 ? `, ${caseData.probable} probable` : ''}<br>
+        ${strainLabel}${source}<br>
+        ${caseData.date}
+      </div>
+    </div>
+  `, { maxWidth: 220 });
+
+  return marker;
+}
+
+async function initMap() {
+  const [cases, stats] = await Promise.all([fetchCases(), fetchStats()]);
+  allCases = cases;
+
+  allCases.forEach(caseData => {
+    const marker = createMarker(caseData);
+    if (marker) markerGroup.addLayer(marker);
+  });
+
+  map.addLayer(markerGroup);
+  updateStats(stats);
+  renderCaseList();
+}
+
+function updateStats(stats) {
+  if (stats) {
+    document.getElementById('total-confirmed').textContent = stats.total_confirmed;
+    document.getElementById('active-locations').textContent = stats.active_countries + ' countries';
+  } else {
+    const totalConfirmed = allCases.reduce((sum, c) => sum + (c.confirmed || 0), 0);
+    document.getElementById('total-confirmed').textContent = totalConfirmed;
+    document.getElementById('active-locations').textContent = new Set(allCases.map(c => c.country)).size + ' countries';
+  }
+}
+
+function renderCaseList() {
+  const sortedCases = [...allCases].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 8);
+  const html = sortedCases.map(c => {
+    const strainLabel = STRAIN_LABELS[c.strain] || c.strain;
+    return `
+      <div class="case-item">
+        <div class="case-location">${c.location}</div>
+        <div class="case-details">${c.confirmed} confirmed${c.probable ? `, ${c.probable} probable` : ''} • ${strainLabel} • ${c.date}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('case-list').innerHTML = html;
+}
+
+initMap();
+</script>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -40,6 +41,9 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 app.use(express.json());
+
+// Serve the dashboard at /
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Routes
 app.use('/api/cases', casesRouter);
