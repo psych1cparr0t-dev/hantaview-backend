@@ -25,17 +25,6 @@ const ECDC_REFERENCE_CASES = [
   { location: 'Vancouver, Canada', country: 'Canada', country_code: 'CA', latitude: 49.25, longitude: -123.12, confirmed: 1, probable: 0, deaths: 0, strain: STRAINS.ANDES, date: '2026-05-13', notes: 'MV Hondius evacuee', source_url: 'https://www.ecdc.europa.eu/en/news-events/epidemiological-update-andes-hantavirus-cases-cruise-ship' },
   { location: 'Brisbane, Australia', country: 'Australia', country_code: 'AU', latitude: -27.47, longitude: 153.02, confirmed: 1, probable: 0, deaths: 0, strain: STRAINS.ANDES, date: '2026-05-14', notes: 'MV Hondius evacuee', source_url: 'https://www.ecdc.europa.eu/en/news-events/epidemiological-update-andes-hantavirus-cases-cruise-ship' },
 
-  // 2026 South American Andes virus cases (endemic, pre-cruise ship exposure source)
-  { location: 'Buenos Aires, Argentina', country: 'Argentina', country_code: 'AR', latitude: -34.6, longitude: -58.38, confirmed: 2, probable: 1, deaths: 0, strain: STRAINS.ANDES, date: '2026-01-10', notes: 'Endemic Andes virus 2026 - Argentina ANLIS report' },
-  { location: 'Mendoza, Argentina', country: 'Argentina', country_code: 'AR', latitude: -32.89, longitude: -68.83, confirmed: 2, probable: 0, deaths: 1, strain: STRAINS.ANDES, date: '2026-02-05', notes: 'Endemic Andes virus 2026 - Argentina ANLIS report' },
-  { location: 'Punta Arenas, Chile', country: 'Chile', country_code: 'CL', latitude: -53.16, longitude: -70.91, confirmed: 2, probable: 1, deaths: 0, strain: STRAINS.ANDES, date: '2026-01-30', notes: 'Endemic Andes virus 2026 - Chile MINSAL report' },
-  { location: 'Temuco, Chile', country: 'Chile', country_code: 'CL', latitude: -38.74, longitude: -72.59, confirmed: 1, probable: 0, deaths: 0, strain: STRAINS.ANDES, date: '2026-03-12', notes: 'Endemic Andes virus 2026 - Chile MINSAL report' },
-
-  // 2026 East Asia Seoul virus (urban rat exposure)
-  { location: 'Seoul, South Korea', country: 'South Korea', country_code: 'KR', latitude: 37.57, longitude: 127.0, confirmed: 6, probable: 2, deaths: 0, strain: STRAINS.SEOUL, date: '2026-02-28', notes: 'Seoul virus 2026 - KDCA surveillance' },
-  { location: 'Busan, South Korea', country: 'South Korea', country_code: 'KR', latitude: 35.18, longitude: 129.07, confirmed: 3, probable: 1, deaths: 0, strain: STRAINS.SEOUL, date: '2026-03-15', notes: 'Seoul virus 2026 - KDCA surveillance' },
-  { location: 'Tokyo, Japan', country: 'Japan', country_code: 'JP', latitude: 35.69, longitude: 139.69, confirmed: 1, probable: 0, deaths: 0, strain: STRAINS.SEOUL, date: '2026-04-22', notes: 'Seoul virus 2026 - NIID Japan report' },
-
   // European endemic Puumala/Dobrava cases (annual AER 2022 data — most recent ECDC publication)
   { location: 'Finland', country: 'Finland', country_code: 'FI', latitude: 61.92, longitude: 25.75, confirmed: 1259, probable: 0, deaths: 0, strain: STRAINS.OTHER, date: '2022-01-01', notes: 'Puumala virus - ECDC AER 2022' },
   { location: 'Sweden', country: 'Sweden', country_code: 'SE', latitude: 60.13, longitude: 18.64, confirmed: 504, probable: 0, deaths: 0, strain: STRAINS.OTHER, date: '2022-01-01', notes: 'Puumala virus - ECDC AER 2022' },
