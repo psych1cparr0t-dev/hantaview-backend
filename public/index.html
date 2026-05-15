@@ -17,22 +17,28 @@
   }
   
   .app-container {
-    display: flex;
     height: 100vh;
+    width: 100vw;
   }
-  
+
   #map {
-    flex: 1;
-    position: relative;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
   }
-  
+
   .sidebar {
+    position: fixed;
+    right: 0; top: 0; bottom: 0;
     width: 420px;
-    background: rgba(10, 14, 39, 0.98);
-    border-left: 1px solid rgba(32, 201, 201, 0.2);
+    background: rgba(7, 10, 24, 0.93);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-left: 1px solid rgba(32, 201, 201, 0.13);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    z-index: 100;
   }
   
   .tab-buttons {
@@ -281,6 +287,92 @@
   ::-webkit-scrollbar-track { background: rgba(32, 201, 201, 0.05); }
   ::-webkit-scrollbar-thumb { background: rgba(32, 201, 201, 0.3); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: rgba(32, 201, 201, 0.5); }
+
+  /* ── Pulse marker ─────────────────────────────── */
+  @keyframes pulse-expand {
+    0%   { transform: scale(0.15); opacity: 0.65; }
+    100% { transform: scale(4);    opacity: 0; }
+  }
+  .leaflet-div-icon { background: none !important; border: none !important; }
+
+  /* ── Alert zone form ──────────────────────────── */
+  .alert-input {
+    width: 100%;
+    background: rgba(32, 201, 201, 0.05);
+    border: 1px solid rgba(32, 201, 201, 0.2);
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: #e0e0e0;
+    font-size: 12px;
+    margin-bottom: 10px;
+    outline: none;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .alert-input:focus {
+    border-color: rgba(32, 201, 201, 0.55);
+    background: rgba(32, 201, 201, 0.09);
+  }
+  .alert-input::placeholder { color: #2e4545; }
+  .alert-input.error { border-color: rgba(232, 90, 48, 0.6); }
+
+  .action-btn {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(32, 201, 201, 0.08);
+    border: 1px solid rgba(32, 201, 201, 0.28);
+    border-radius: 4px;
+    color: #20c9c9;
+    font-size: 11px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+    font-family: inherit;
+    text-align: center;
+  }
+  .action-btn:hover { background: rgba(32, 201, 201, 0.16); border-color: rgba(32, 201, 201, 0.5); }
+  .action-btn.drawing { background: rgba(232, 90, 48, 0.1); border-color: rgba(232, 90, 48, 0.4); color: #e85a30; }
+  .action-btn.primary { font-weight: 600; background: rgba(32, 201, 201, 0.14); }
+
+  .zone-item {
+    background: rgba(32, 201, 201, 0.05);
+    border: 1px solid rgba(32, 201, 201, 0.13);
+    border-radius: 4px;
+    padding: 9px 10px;
+    margin-bottom: 7px;
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .zone-remove {
+    color: #503030;
+    cursor: pointer;
+    font-size: 18px;
+    background: none;
+    border: none;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: color 0.15s;
+    padding: 0;
+  }
+  .zone-remove:hover { color: #e85a30; }
+
+  .confirm-box {
+    background: rgba(76, 160, 102, 0.1);
+    border-left: 3px solid #4ca066;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #90c0a0;
+    display: none;
+  }
 </style>
 </head>
 <body>
@@ -291,7 +383,7 @@
   <div class="sidebar">
     <div class="tab-buttons">
       <button class="tab-btn active" data-tab="surveillance">Surveillance</button>
-      <button class="tab-btn" data-tab="outbreak">Outbreak Alert</button>
+      <button class="tab-btn" data-tab="alerts">Alert Zones</button>
       <button class="tab-btn" data-tab="prepare">How to Prepare</button>
     </div>
     
@@ -325,67 +417,27 @@
       </div>
     </div>
 
-    <div class="tab-content" id="outbreak">
+    <div class="tab-content" id="alerts">
+      <div class="section-title">Alert Zone<span class="section-subtitle">Register to be notified when confirmed cases appear in your area</span></div>
+
       <div class="alert-box">
-        <strong>MV Hondius — Andes Virus Cluster</strong> — May 2026<br>
-        Classification: International disease event (WHO IHR Art. 12). Status: Contained; active monitoring ongoing.
+        <strong>Data accuracy &amp; limitations</strong> — Case data is sourced from CDC NNDSS (dataset tfcp-ufzp), WHO Disease Outbreak News, and ECDC published reports. All datasets carry inherent reporting delays of days to weeks and counts are subject to revision without notice. This alert service is a <strong>secondary surveillance indicator only</strong>. It does not replace guidance from your national or regional health authority. Regardless of alert status, continue to practise standard infection-control measures: maintain hand hygiene, observe respiratory precautions in high-risk settings, and implement rodent-exclusion protocols where applicable. Do not alter clinical or public health decisions based solely on this dashboard.
       </div>
 
-      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px;">
-        <div class="stat-card">
-          <div class="stat-value">8</div>
-          <div class="stat-label">Confirmed cases</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">2</div>
-          <div class="stat-label">Probable cases</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">3</div>
-          <div class="stat-label">Deaths (CFR 27%)</div>
-        </div>
-      </div>
+      <div class="section-title">Contact<span class="section-subtitle">Email address for case notifications</span></div>
+      <input type="email" id="alert-email" class="alert-input" placeholder="your@email.com" autocomplete="email" />
 
-      <div class="section-title">Virological Characteristics<span class="section-subtitle">What the pathogen is — species, genome structure, and transmission behaviour</span></div>
-      <div class="info-box">
-        <strong>Aetiological agent:</strong> <em>Andes orthohantavirus</em> (ANDV), family <em>Hantaviridae</em>, genus <em>Orthohantavirus</em>. Tri-segmented negative-sense ssRNA <span class="term-gloss">(single-stranded RNA — genetic material encoded in reverse-complement form; requires replication before expression)</span> genome (S, M, L segments encoding nucleocapsid, glycoproteins, and RNA polymerase). Natural reservoir: <em>Oligoryzomys longicaudatus</em> (long-tailed pygmy rice rat), endemic to Andean and Patagonian corridors of Argentina and Chile.<br><br>
-        ANDV is the only hantavirus species with documented, laboratory-confirmed human-to-human transmission (cluster studies, Argentina 1996–2011; CFR in person-to-person clusters: ~23%). Secondary transmission requires close, prolonged mucosal or percutaneous <span class="term-gloss">(through broken or abraded skin)</span> contact with infectious blood or secretions. No nosocomial <span class="term-gloss">(hospital-acquired)</span> aerosol transmission has been documented.
-      </div>
+      <div class="section-title">Monitoring Zone<span class="section-subtitle">Draw a boundary on the map — alerts fire when a new confirmed case falls within it</span></div>
+      <p style="font-size: 11px; color: #3a5858; line-height: 1.6; margin-bottom: 10px;">Click the button below, then click and drag a rectangle directly on the map. Redraw as many times as needed before registering.</p>
+      <button class="action-btn" id="draw-zone-btn">&#10022; &nbsp;Draw Zone on Map</button>
+      <button class="action-btn primary" id="register-btn" style="display:none;">Register Alert Zone</button>
+      <div class="confirm-box" id="confirm-msg"></div>
 
-      <div class="section-title">Clinical &amp; Epidemiological Summary<span class="section-subtitle">What happened, who got sick, and the formal case breakdown</span></div>
-      <div class="info-box">
-        Index cases reported 2–4 May 2026 aboard Dutch-flagged expedition vessel MV Hondius (IMO 9782568), following a land excursion in Río Negro Province, Argentina (ANDV-endemic zone). Clinical presentation consistent with hantavirus cardiopulmonary syndrome <span class="term-gloss">(HCPS — severe lung and circulatory failure; the South American presentation of hantavirus disease)</span>: febrile prodrome <span class="term-gloss">(prodrome — early symptom phase preceding the defining illness)</span> followed by non-cardiogenic pulmonary oedema <span class="term-gloss">(fluid in the lungs caused by vessel leakage, not heart failure)</span> and cardiovascular compromise.<br><br>
-        <strong>Case classification (WHO criteria):</strong><br>
-        <em>Confirmed</em> (n=8): RT-PCR <span class="term-gloss">(reverse transcription PCR — detects viral RNA in blood or tissue)</span> positive or four-fold rise in IgG titre <span class="term-gloss">(IgG — antibody class indicating recent or resolving infection; a fourfold titre rise confirms active disease)</span>.<br>
-        <em>Probable</em> (n=2): Compatible clinical syndrome + epidemiological link; serology <span class="term-gloss">(blood-based antibody testing)</span> pending or inconclusive.<br><br>
-        Vessel carried 147 passengers and crew. Following evacuation, cases were repatriated across 7 countries; 45-day monitoring period applied to all contacts.
-      </div>
-
-      <div class="section-title">Public Health Response<span class="section-subtitle">Containment and monitoring actions taken by international health agencies</span></div>
-      <div class="case-item">
-        <strong style="color: #20c9c9;">Medical Evacuation</strong><br>
-        <span class="case-details">Critical cases airlifted to level-III facilities (Cape Town, Amsterdam); mechanical ventilation and vasopressor support initiated</span>
-      </div>
-      <div class="case-item">
-        <strong style="color: #20c9c9;">Passenger Repatriation</strong><br>
-        <span class="case-details">All remaining passengers evacuated to countries of origin; national health authorities notified under IHR notification obligations</span>
-      </div>
-      <div class="case-item">
-        <strong style="color: #20c9c9;">International Contact Tracing</strong><br>
-        <span class="case-details">WHO, CDC, ECDC and 7 national agencies coordinated. Contacts monitored for 45 days (maximum ANDV incubation + buffer)</span>
-      </div>
-      <div class="case-item">
-        <strong style="color: #20c9c9;">WHO Risk Assessment</strong><br>
-        <span class="case-details">Global population risk assessed as LOW. Sustained community transmission not observed; no secondary cases identified outside vessel contacts</span>
-      </div>
-
-      <div class="section-title">Infection Prevention Notes<span class="section-subtitle">Handling precautions for clinical staff, laboratory workers, and close contacts</span></div>
-      <div class="info-box">
-        Contact and droplet precautions are recommended for clinical management of suspected ANDV cases. Standard precautions (gloves, apron) are sufficient for indirect contact. Specimens should be handled at BSL-2 with BSL-3 practices <span class="term-gloss">(biosafety levels — a 1–4 scale of lab containment; BSL-2 covers moderate-risk agents, BSL-3 adds respiratory protection for pathogens transmissible by aerosol)</span>; live virus work requires BSL-3 containment. Ribavirin <span class="term-gloss">(a broad-spectrum antiviral nucleoside analogue that inhibits viral RNA replication)</span> has shown in-vitro activity against ANDV; clinical evidence for benefit in HCPS remains limited to observational data.
-      </div>
+      <div class="section-title">Active Zones<span class="section-subtitle">Saved boundaries — stored in your browser, not transmitted to any server</span></div>
+      <div id="zone-list"></div>
 
       <div class="tab-footer">
-        <strong style="color: #507878;">Abbreviations —</strong> ANDV: Andes orthohantavirus &nbsp;·&nbsp; HCPS: hantavirus cardiopulmonary syndrome &nbsp;·&nbsp; IHR: International Health Regulations &nbsp;·&nbsp; RT-PCR: reverse transcription polymerase chain reaction &nbsp;·&nbsp; IgG: immunoglobulin G (antibody confirming prior/active infection) &nbsp;·&nbsp; BSL: biosafety level &nbsp;·&nbsp; CFR: case fatality ratio &nbsp;·&nbsp; ssRNA: single-stranded RNA &nbsp;·&nbsp; IMO: International Maritime Organization vessel identifier
+        Zone boundaries and contact addresses are stored in browser local storage only. No personal data is transmitted to external servers. Alert matching runs client-side against the surveillance dataset each time the page loads. Email delivery infrastructure is pending — registered zones will be matched against future data updates when notification service is enabled.
       </div>
     </div>
 
@@ -522,6 +574,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 
 <script>
 const tabButtons = document.querySelectorAll('.tab-btn');
@@ -625,8 +679,14 @@ function createMarker(caseData) {
 
   const marker = L.marker([lat, lng], {
     icon: L.divIcon({
-      html: `<div style="width: 12px; height: 12px; background: ${color}; border: 2px solid rgba(255,255,255,0.5); border-radius: 50%; box-shadow: 0 0 6px ${color}80;"></div>`,
-      iconSize: [12, 12]
+      html: `<div style="position:relative;width:22px;height:22px;">
+        <div style="position:absolute;inset:0;border-radius:50%;background:${color};animation:pulse-expand 2.6s ease-out infinite;"></div>
+        <div style="position:absolute;inset:0;border-radius:50%;background:${color};animation:pulse-expand 2.6s ease-out infinite;animation-delay:0.9s;"></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;background:${color};"></div>
+      </div>`,
+      iconSize: [22, 22],
+      iconAnchor: [11, 11],
+      className: ''
     })
   });
 
@@ -648,6 +708,7 @@ function createMarker(caseData) {
 }
 
 async function initMap() {
+  map.invalidateSize();
   const [cases, stats] = await Promise.all([fetchCases(), fetchStats()]);
   allCases = cases;
 
@@ -659,6 +720,7 @@ async function initMap() {
   map.addLayer(markerGroup);
   updateStats(stats);
   renderCaseList();
+  checkZoneAlerts();
 }
 
 function updateStats(stats) {
@@ -687,6 +749,135 @@ function renderCaseList() {
 }
 
 initMap();
+
+// ── Alert Zone ────────────────────────────────────────────────
+const ZONES_KEY = 'hantaview_alert_zones';
+let savedZones = JSON.parse(localStorage.getItem(ZONES_KEY) || '[]');
+let pendingBounds = null;
+let pendingLayer = null;
+const drawnZonesGroup = L.featureGroup().addTo(map);
+
+function renderZoneList() {
+  const el = document.getElementById('zone-list');
+  if (!el) return;
+  if (savedZones.length === 0) {
+    el.innerHTML = '<div style="font-size:11px;color:#2e4545;margin-top:4px;">No zones registered yet.</div>';
+    return;
+  }
+  el.innerHTML = savedZones.map((z, i) => `
+    <div class="zone-item">
+      <div>
+        <div style="color:#20c9c9;font-weight:600;margin-bottom:3px;">${z.email}</div>
+        <div style="color:#3a5858;">
+          ${z.north.toFixed(2)}°N – ${z.south.toFixed(2)}°S &nbsp;·&nbsp;
+          ${z.west.toFixed(2)}° – ${z.east.toFixed(2)}°
+        </div>
+      </div>
+      <button class="zone-remove" onclick="removeZone(${i})" title="Remove zone">×</button>
+    </div>
+  `).join('');
+}
+
+function renderZoneLayers() {
+  drawnZonesGroup.clearLayers();
+  savedZones.forEach(z => {
+    L.rectangle([[z.south, z.west], [z.north, z.east]], {
+      color: '#20c9c9', weight: 1, fillOpacity: 0.05, dashArray: '5 5'
+    }).addTo(drawnZonesGroup);
+  });
+}
+
+window.removeZone = function(i) {
+  savedZones.splice(i, 1);
+  localStorage.setItem(ZONES_KEY, JSON.stringify(savedZones));
+  renderZoneList();
+  renderZoneLayers();
+};
+
+document.getElementById('draw-zone-btn').addEventListener('click', function() {
+  const btn = this;
+  btn.textContent = 'Click and drag on the map…';
+  btn.classList.add('drawing');
+  if (pendingLayer) { map.removeLayer(pendingLayer); pendingLayer = null; }
+  document.getElementById('register-btn').style.display = 'none';
+
+  const handler = new L.Draw.Rectangle(map, {
+    shapeOptions: { color: '#20c9c9', weight: 1.5, fillOpacity: 0.08, dashArray: '5 5' }
+  });
+  handler.enable();
+
+  map.once(L.Draw.Event.CREATED, function(e) {
+    pendingLayer = e.layer;
+    pendingLayer.addTo(map);
+    pendingBounds = e.layer.getBounds();
+    btn.textContent = '↺  Redraw Zone';
+    btn.classList.remove('drawing');
+    document.getElementById('register-btn').style.display = 'block';
+  });
+
+  map.once(L.Draw.Event.DRAWSTOP, function() {
+    if (!pendingBounds) {
+      btn.textContent = '✦  Draw Zone on Map';
+      btn.classList.remove('drawing');
+    }
+  });
+});
+
+document.getElementById('register-btn').addEventListener('click', function() {
+  const emailEl = document.getElementById('alert-email');
+  const email = emailEl.value.trim();
+
+  emailEl.classList.remove('error');
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    emailEl.classList.add('error');
+    emailEl.focus();
+    return;
+  }
+  if (!pendingBounds) return;
+
+  const zone = {
+    email,
+    north: +pendingBounds.getNorth().toFixed(4),
+    south: +pendingBounds.getSouth().toFixed(4),
+    east:  +pendingBounds.getEast().toFixed(4),
+    west:  +pendingBounds.getWest().toFixed(4),
+    created: new Date().toISOString()
+  };
+
+  savedZones.push(zone);
+  localStorage.setItem(ZONES_KEY, JSON.stringify(savedZones));
+  renderZoneList();
+  renderZoneLayers();
+
+  // Reset UI
+  if (pendingLayer) { map.removeLayer(pendingLayer); pendingLayer = null; }
+  pendingBounds = null;
+  emailEl.value = '';
+  document.getElementById('draw-zone-btn').textContent = '✦  Draw Zone on Map';
+  document.getElementById('register-btn').style.display = 'none';
+
+  const conf = document.getElementById('confirm-msg');
+  conf.style.display = 'block';
+  conf.innerHTML = '✓ Zone registered for <strong>' + email + '</strong>. You will be notified when cases are reported within this boundary.';
+  setTimeout(() => { conf.style.display = 'none'; }, 6000);
+});
+
+// Check existing zones against current cases
+function checkZoneAlerts() {
+  if (!savedZones.length || !allCases.length) return;
+  savedZones.forEach(z => {
+    const hits = allCases.filter(c =>
+      c.latitude  >= z.south && c.latitude  <= z.north &&
+      c.longitude >= z.west  && c.longitude <= z.east
+    );
+    if (hits.length) {
+      console.info(`[Hantaview] Alert: ${hits.length} case(s) in zone for ${z.email}`);
+    }
+  });
+}
+
+renderZoneList();
+renderZoneLayers();
 </script>
 
 </body>
