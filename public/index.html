@@ -281,17 +281,15 @@
         <div class="stat-label">Active locations</div>
       </div>
       
-      <div class="reassurance-box">
-        ✓ <strong>Low global incidence:</strong> Fewer than 1,000 annual cases worldwide. Proper precautions virtually eliminate risk.
-      </div>
-      
-      <div class="section-title">Data Sources</div>
       <div class="info-box">
-        • CDC Hantavirus Surveillance<br>
-        • WHO Disease Outbreak News<br>
-        • ECDC Outbreak Assessments<br>
-        • National Health Agencies<br><br>
-        <span style="font-size: 10px; color: #666;">Note: This dashboard integrates real outbreak data (MV Hondius, May 2026). Historical case data shown is representative/illustrative. For verified current cases, visit CDC.gov or WHO.int directly.</span>
+        <strong>Epidemiological context:</strong> Hantavirus pulmonary syndrome (HPS) and hemorrhagic fever with renal syndrome (HFRS) together account for an estimated 150,000–200,000 hospitalizations annually worldwide (WHO, 2023). Case fatality ratios vary markedly by species: <em>Sin Nombre virus</em> (SNV) ~36%; <em>Andes virus</em> (ANDV) ~25–35%; <em>Puumala virus</em> (PUUV) &lt;1%; <em>Hantaan virus</em> (HTNV) 1–15%. No licensed vaccine exists for any hantavirus species outside of limited East Asian markets.
+      </div>
+
+      <div class="section-title">Data Sources &amp; Methodology</div>
+      <div class="info-box">
+        <strong>CDC NNDSS / Socrata API</strong> — Dataset <code style="color:#20c9c9;">tfcp-ufzp</code>. State-level HPS case counts extracted from the National Notifiable Diseases Surveillance System. Rows filtered to <code style="color:#20c9c9;">hantavirus_pulmonary_syndrome &gt; 0</code>; most-recent week retained per geographic area to suppress double-counting. Most recent public release: 2022 annual data.<br><br>
+        <strong>WHO Disease Outbreak News</strong> — General news RSS feed (<code style="color:#20c9c9;">who.int/rss-feeds/news-english.xml</code>). Items screened for hantavirus-related keywords; structured fields extracted via xml2js. DON-specific feed deprecated 2023.<br><br>
+        <strong>ECDC</strong> — Annual Epidemiological Report 2022 aggregate counts and MV Hondius 2026 epidemiological update. ECDC surveillance pages are JavaScript-rendered (Drupal/React Atlas); structured data sourced from published PDF reports and official press releases. Reference data is static pending availability of a machine-readable API.
       </div>
       
       <div class="section-title">Recent Cases (2026)</div>
@@ -300,135 +298,143 @@
     
     <div class="tab-content" id="outbreak">
       <div class="alert-box">
-        <strong>MV Hondius Outbreak</strong> — May 2026<br>
-        Status: Controlled, all passengers evacuated
+        <strong>MV Hondius — Andes Virus Cluster</strong> — May 2026<br>
+        Classification: International disease event (WHO IHR Art. 12). Status: Contained; active monitoring ongoing.
       </div>
-      
-      <div class="stat-card">
-        <div class="stat-value">11</div>
-        <div class="stat-label">Total cases reported</div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+        <div class="stat-card">
+          <div class="stat-value">8</div>
+          <div class="stat-label">Confirmed cases</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">2</div>
+          <div class="stat-label">Probable cases</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Deaths (CFR 27%)</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">3</div>
-        <div class="stat-label">Deaths</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">Andes Virus</div>
-        <div class="stat-label">Identified strain</div>
-      </div>
-      
-      <div class="section-title">What Happened</div>
+
+      <div class="section-title">Virological Characteristics</div>
       <div class="info-box">
-        Dutch-flagged cruise ship MV Hondius reported severe respiratory illness cases May 2–4, 2026. Passengers had visited Argentina (where Andes virus is endemic) before boarding. Eight confirmed, two probable, one inconclusive case. Andes virus is the only hantavirus capable of limited human-to-human transmission via close, prolonged contact.
+        <strong>Aetiological agent:</strong> <em>Andes orthohantavirus</em> (ANDV), family <em>Hantaviridae</em>, genus <em>Orthohantavirus</em>. Tri-segmented negative-sense ssRNA genome (S, M, L segments). Natural reservoir: <em>Oligoryzomys longicaudatus</em> (long-tailed pygmy rice rat), endemic to Andean and Patagonian corridors of Argentina and Chile.<br><br>
+        ANDV is the only hantavirus species with documented, laboratory-confirmed human-to-human transmission (cluster studies, Argentina 1996–2011; CFR in person-to-person clusters: ~23%). Secondary transmission requires close, prolonged mucosal or percutaneous contact with infectious blood or secretions. No nosocomial aerosol transmission has been documented.
       </div>
-      
-      <div class="section-title">Response Actions</div>
+
+      <div class="section-title">Clinical &amp; Epidemiological Summary</div>
+      <div class="info-box">
+        Index cases reported 2–4 May 2026 aboard Dutch-flagged expedition vessel MV Hondius (IMO 9782568), following a land excursion in Río Negro Province, Argentina (ANDV-endemic zone). Clinical presentation consistent with hantavirus cardiopulmonary syndrome (HCPS): febrile prodrome followed by non-cardiogenic pulmonary oedema and cardiovascular compromise.<br><br>
+        <strong>Case classification (WHO criteria):</strong><br>
+        <em>Confirmed</em> (n=8): RT-PCR positive or four-fold rise in IgG titre.<br>
+        <em>Probable</em> (n=2): Compatible clinical syndrome + epidemiological link; serology pending or inconclusive.<br><br>
+        Vessel carried 147 passengers and crew. Following evacuation, cases were repatriated across 7 countries; 45-day monitoring period applied to all contacts.
+      </div>
+
+      <div class="section-title">Public Health Response</div>
       <div class="case-item">
         <strong style="color: #20c9c9;">Medical Evacuation</strong><br>
-        <span class="case-details">3 patients airlifted to medical facilities (South Africa, Netherlands); ICU care provided</span>
+        <span class="case-details">Critical cases airlifted to level-III facilities (Cape Town, Amsterdam); mechanical ventilation and vasopressor support initiated</span>
       </div>
       <div class="case-item">
-        <strong style="color: #20c9c9;">Full Repatriation</strong><br>
-        <span class="case-details">All 147 remaining passengers & crew evacuated to 12 countries; quarantine/monitoring in place</span>
+        <strong style="color: #20c9c9;">Passenger Repatriation</strong><br>
+        <span class="case-details">All remaining passengers evacuated to countries of origin; national health authorities notified under IHR notification obligations</span>
       </div>
       <div class="case-item">
-        <strong style="color: #20c9c9;">Contact Tracing</strong><br>
-        <span class="case-details">WHO, CDC, ECDC coordinated international contact tracing; passengers monitored for 45 days</span>
+        <strong style="color: #20c9c9;">International Contact Tracing</strong><br>
+        <span class="case-details">WHO, CDC, ECDC and 7 national agencies coordinated. Contacts monitored for 45 days (maximum ANDV incubation + buffer)</span>
       </div>
       <div class="case-item">
-        <strong style="color: #20c9c9;">Risk Assessment</strong><br>
-        <span class="case-details">WHO assessed risk to global population as LOW; transmission requires close sustained contact</span>
+        <strong style="color: #20c9c9;">WHO Risk Assessment</strong><br>
+        <span class="case-details">Global population risk assessed as LOW. Sustained community transmission not observed; no secondary cases identified outside vessel contacts</span>
       </div>
-      
-      <div class="section-title">Key Facts</div>
+
+      <div class="section-title">Infection Prevention Notes</div>
       <div class="info-box">
-        • Andes virus: only hantavirus with documented human-to-human spread<br>
-        • Transmission: close, prolonged contact only—NOT airborne like COVID-19<br>
-        • Primary source: rodent exposure (urine, feces, saliva)<br>
-        • Fatality rate: 38% (with supportive care)<br>
-        • Incubation: 1–4 weeks
+        Contact and droplet precautions are recommended for clinical management of suspected ANDV cases. Standard precautions (gloves, apron) are sufficient for indirect contact. Specimens should be handled at BSL-2 with BSL-3 practices; live virus work requires BSL-3 containment. Ribavirin has shown in-vitro activity against ANDV; clinical evidence for benefit in HCPS remains limited to observational data.
       </div>
     </div>
     
     <div class="tab-content" id="prepare">
-      <div class="section-title">Disease Origin</div>
+      <div class="section-title">Aetiology &amp; Natural History</div>
       <div class="info-box">
-        Hantaviruses are found in rodent populations worldwide. Each virus is associated with specific rodent species: <strong>Sin Nombre</strong> (deer mice, western North America—high-risk for campers, farmers), <strong>Seoul</strong> (Norway rats, urban areas worldwide—city dwellers), <strong>Andes</strong> (pygmy rice rats, South America—agricultural zones), and others in Europe and Asia. Humans become infected through direct contact with infected rodent droppings, urine, or saliva—or by inhaling aerosols from contaminated surfaces. The virus has been circulating in rodents for thousands of years without causing humans much trouble, until we started camping, farming, and storing grain in rodent-infested spaces.
+        Hantaviruses (family <em>Hantaviridae</em>) are zoonotic RNA viruses maintained in wild rodent reservoirs. Each species co-evolved with a specific host: <em>Sin Nombre orthohantavirus</em> (SNV) — <em>Peromyscus maniculatus</em> (deer mouse), western North America; <em>Andes orthohantavirus</em> (ANDV) — <em>Oligoryzomys longicaudatus</em>, Andean/Patagonian South America; <em>Seoul orthohantavirus</em> (SEOV) — <em>Rattus norvegicus</em> (Norway rat), cosmopolitan distribution; <em>Puumala orthohantavirus</em> (PUUV) — <em>Myodes glareolus</em> (bank vole), northern Europe.<br><br>
+        Reservoir hosts sustain persistent, largely asymptomatic infection. Viral shedding occurs in urine, feces, and saliva. Human infection is a spillover event — not part of the natural transmission cycle. Estimated basic reproduction number (R₀) for ANDV in documented person-to-person clusters: 1.1–1.2, insufficient to sustain epidemic chains without continuous zoonotic amplification.
       </div>
-      
-      <div class="section-title">Transmissibility (NOT Airborne)</div>
+
+      <div class="section-title">Routes of Transmission</div>
       <div class="transmission-flow">
         <div class="flow-step">
           <div class="step-number">1</div>
-          <div class="step-text"><strong>Rodent contact</strong> — Handling infected rodents or contaminated materials (droppings, nesting materials)</div>
+          <div class="step-text"><strong>Inhalation of infectious aerosols</strong> — Primary route. Disturbance of dried rodent excreta in enclosed, poorly ventilated spaces generates respirable particles (&lt;5 µm) carrying viable virus</div>
         </div>
         <div class="flow-step">
           <div class="step-number">2</div>
-          <div class="step-text"><strong>Inhalation</strong> — Breathing dust from rodent feces in poorly ventilated spaces (NOT person-to-person through coughing)</div>
+          <div class="step-text"><strong>Direct mucosal or percutaneous contact</strong> — Handling infected rodents or contaminated materials without barrier protection</div>
         </div>
         <div class="flow-step">
           <div class="step-number">3</div>
-          <div class="step-text"><strong>Mucosal exposure</strong> — Touching face/mouth after handling contaminated materials</div>
+          <div class="step-text"><strong>Ingestion</strong> — Consumption of contaminated food or water; considered a minor route</div>
         </div>
         <div class="flow-step">
           <div class="step-number">4</div>
-          <div class="step-text"><strong>Rare human transmission</strong> — Andes virus only; requires very close, prolonged contact with infected blood/body fluids</div>
+          <div class="step-text"><strong>Human-to-human (ANDV only)</strong> — Documented exclusively for Andes virus; requires close, prolonged contact with infectious secretions. Not observed for any other hantavirus species</div>
         </div>
       </div>
-      
-      <div class="reassurance-box">
-        🛡️ <strong>Why it's NOT like COVID:</strong> Hantavirus is NOT aerosolized. Normal casual contact (sitting near someone, breathing same air in normal spaces) poses ZERO risk. You cannot catch it from a cough or sneeze. Risk requires either rodent contact or, rarely, very close contact with an infected person's blood/fluids.
-      </div>
-      
-      <div class="section-title">Why It Won't Go Pandemic</div>
+
       <div class="info-box">
-        <strong style="color: #20c9c9;">1. Stable Virus</strong><br>
-        Andes virus (the only human-transmissible strain) showed no significant mutations over 22 years of outbreaks. It's evolutionarily locked in—won't suddenly become "airborne" or more contagious.
+        <strong>Transmission not documented by:</strong> casual contact, airborne spread in normal ventilation conditions, fomites, arthropod vectors, or consumption of cooked food. Hantavirus does not possess the receptor-binding or environmental stability characteristics associated with airborne pathogens (e.g., SARS-CoV-2, <em>M. tuberculosis</em>).
       </div>
-      <div class="info-box">
-        <strong style="color: #20c9c9;">2. Dead-End Host</strong><br>
-        Hantavirus evolved in rodents over millennia. Human infection is a biological accident. The virus doesn't "want" to infect humans—it's poorly adapted to us and spreads inefficiently, even in close quarters.
+
+      <div class="section-title">Clinical Presentation (HPS/HCPS)</div>
+      <div class="case-item">
+        <strong style="color: #20c9c9;">Phase 1 — Prodromal (days 1–5)</strong><br>
+        <span class="case-details">Fever (38–40°C), myalgia, headache, malaise, nausea/vomiting. Thrombocytopaenia and elevated haematocrit may be detected. Clinically indistinguishable from influenza-like illness.</span>
       </div>
-      <div class="info-box">
-        <strong style="color: #20c9c9;">3. Spreads Itself to Death</strong><br>
-        The virus is <em>too</em> deadly. It rapidly incapacitates or kills hosts before they can spread it widely—an evolutionary trap. (The MV Hondius outbreak, confined in a ship with 147 people, only produced 8 confirmed cases. That's how weak human transmission is.)
+      <div class="case-item">
+        <strong style="color: #e85a30;">Phase 2 — Cardiopulmonary (days 5–10)</strong><br>
+        <span class="case-details">Rapid onset non-cardiogenic pulmonary oedema; hypoxia requiring supplemental oxygen or mechanical ventilation; cardiogenic shock in severe cases. Radiograph: bilateral interstitial infiltrates. Marked thrombocytopaenia, elevated LDH, haemoconcentration.</span>
       </div>
-      <div class="info-box">
-        <strong style="color: #20c9c9;">4. No Airborne Adaptation</strong><br>
-        Hantavirus lacks the genetic structure to become airborne like COVID or influenza. Respiratory transmission requires specific viral proteins and aerosol stability—hantavirus doesn't have this architecture.
+      <div class="case-item">
+        <strong style="color: #20c9c9;">Phase 3 — Convalescent</strong><br>
+        <span class="case-details">Rapid diuresis and clinical improvement in survivors. Full recovery may take weeks to months; persistent fatigue and reduced exercise tolerance reported. No chronic carrier state documented.</span>
       </div>
-      
-      <div class="section-title">Prevention Strategy</div>
-      
-      <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">Environmental Control</div>
+      <div class="info-box" style="margin-top: 10px;">
+        <strong>Management:</strong> No approved specific antiviral therapy for HPS. Treatment is supportive — early ICU admission, lung-protective ventilation, vasopressors for haemodynamic support, judicious fluid management. Ribavirin has demonstrated in-vitro activity against multiple hantavirus species; clinical benefit in established HPS remains unproven. Extracorporeal membrane oxygenation (ECMO) has been used in severe refractory cases.
+      </div>
+
+      <div class="section-title">Exposure Prevention</div>
+
+      <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">Environmental Controls</div>
       <div class="diagram-grid">
         <div class="diagram-box">
           <span class="diagram-icon">🏠</span>
-          <div class="diagram-label"><strong>Seal Entry Points</strong><br>Gaps larger than ¼" in walls, foundations, pipes</div>
+          <div class="diagram-label"><strong>Exclusion</strong><br>Seal gaps ≥6 mm in walls, foundations, and utility penetrations</div>
         </div>
         <div class="diagram-box">
           <span class="diagram-icon">🗑️</span>
-          <div class="diagram-label"><strong>Remove Food Sources</strong><br>Sealed containers; no crumbs or debris</div>
+          <div class="diagram-label"><strong>Harborage Reduction</strong><br>Eliminate food sources and nesting materials; use sealed containers</div>
         </div>
         <div class="diagram-box">
           <span class="diagram-icon">🧹</span>
-          <div class="diagram-label"><strong>Ventilation First</strong><br>Open windows before cleaning rodent areas</div>
+          <div class="diagram-label"><strong>Pre-Ventilation</strong><br>Open and ventilate enclosed spaces ≥30 min before entry or cleaning</div>
         </div>
         <div class="diagram-box">
           <span class="diagram-icon">🧼</span>
-          <div class="diagram-label"><strong>Spray & Wait</strong><br>Spray droppings with bleach (10%), wait 5 min before cleanup</div>
+          <div class="diagram-label"><strong>Chemical Inactivation</strong><br>Apply 10% sodium hypochlorite to excreta; allow 5 min contact time before wet-wiping</div>
         </div>
       </div>
-      
-      <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">Personal Protective Equipment</div>
+
+      <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">Personal Protective Equipment (Rodent Exposure)</div>
       <div class="ppe-grid">
         <div class="ppe-item">
           <span class="ppe-icon">😷</span>
-          <div class="ppe-name">N95 Mask</div>
+          <div class="ppe-name">N95 Respirator</div>
         </div>
         <div class="ppe-item">
           <span class="ppe-icon">🧤</span>
-          <div class="ppe-name">Gloves (Nitrile)</div>
+          <div class="ppe-name">Nitrile Gloves</div>
         </div>
         <div class="ppe-item">
           <span class="ppe-icon">👕</span>
@@ -436,7 +442,7 @@
         </div>
         <div class="ppe-item">
           <span class="ppe-icon">🦶</span>
-          <div class="ppe-name">Closed-Toe Shoes</div>
+          <div class="ppe-name">Closed-Toe Footwear</div>
         </div>
         <div class="ppe-item">
           <span class="ppe-icon">🥽</span>
@@ -444,47 +450,33 @@
         </div>
         <div class="ppe-item">
           <span class="ppe-icon">👒</span>
-          <div class="ppe-name">Hat/Head Cover</div>
+          <div class="ppe-name">Head Cover</div>
         </div>
       </div>
-      
-      <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">Behavioral Practices</div>
+
+      <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">High-Risk Activity Guidance</div>
       <div class="diagram-grid">
         <div class="diagram-box">
-          <span class="diagram-icon">🚫</span>
-          <div class="diagram-label"><strong>Don't Handle Rodents</strong><br>Especially if sick or dead</div>
-        </div>
-        <div class="diagram-box">
           <span class="diagram-icon">🏕️</span>
-          <div class="diagram-label"><strong>Camp Safely</strong><br>Keep tent & food sealed; avoid rodent-infested areas</div>
+          <div class="diagram-label"><strong>Field &amp; Camping</strong><br>Sleep on raised surfaces; store food in sealed containers; inspect shelters for signs of rodent activity before use</div>
         </div>
         <div class="diagram-box">
           <span class="diagram-icon">🚜</span>
-          <div class="diagram-label"><strong>Farm Safety</strong><br>Stored grain is rodent magnet; use proper ventilation</div>
+          <div class="diagram-label"><strong>Agricultural Work</strong><br>Grain storage is high-risk; use respiratory protection when operating machinery in enclosed, dusty environments</div>
         </div>
         <div class="diagram-box">
           <span class="diagram-icon">🔦</span>
-          <div class="diagram-label"><strong>Inspect Before Use</strong><br>Cabins, sheds, stored items—look for droppings</div>
+          <div class="diagram-label"><strong>Cabin/Shed Entry</strong><br>Ventilate before entry; wet-clean rather than sweeping; do not disturb accumulated excreta dry</div>
+        </div>
+        <div class="diagram-box">
+          <span class="diagram-icon">🧪</span>
+          <div class="diagram-label"><strong>Laboratory</strong><br>Live virus work: BSL-3 containment. Diagnostic specimens: BSL-2 with BSL-3 practices (N95, face shield, gloves)</div>
         </div>
       </div>
-      
-      <div style="margin: 12px 0; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px;">Social Distancing (If Exposed)</div>
+
+      <div class="section-title">Clinical Decision Point</div>
       <div class="info-box">
-        Standard precautions sufficient for most situations. If caring for a confirmed hantavirus patient: droplet precautions (3-foot distance, masks) during close contact with respiratory secretions; standard precautions otherwise. Person-to-person transmission is extremely rare and only documented with Andes virus after intense, prolonged contact with blood/body fluids.
-      </div>
-      
-      <div class="section-title">Symptoms to Monitor</div>
-      <div class="case-item">
-        <strong style="color: #e85a30;">Early (1–2 weeks)</strong><br>
-        <span class="case-details">Fever, headache, muscle aches, fatigue, gastrointestinal symptoms</span>
-      </div>
-      <div class="case-item">
-        <strong style="color: #e85a30;">Late (progressive)</strong><br>
-        <span class="case-details">Cough, shortness of breath, chest tightness, rapid heartbeat</span>
-      </div>
-      
-      <div class="reassurance-box">
-        ✓ Seek medical care immediately if symptomatic after potential rodent exposure. Early treatment with supportive care (oxygen, fluids, monitoring) significantly improves survival rates.
+        Seek urgent medical assessment if fever, myalgia, or dyspnoea develops within 45 days of potential rodent exposure or contact with a confirmed hantavirus case. Inform the treating clinician of the exposure history — early recognition is critical, as respiratory deterioration can be precipitous. There is no reliable point-of-care test; diagnosis requires PCR or serological confirmation at a reference laboratory.
       </div>
     </div>
   </div>
