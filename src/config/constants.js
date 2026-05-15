@@ -1,0 +1,131 @@
+const STRAINS = {
+  SIN_NOMBRE: 'sin_nombre',
+  SEOUL: 'seoul',
+  ANDES: 'andes',
+  OTHER: 'other',
+};
+
+const SOURCES = {
+  CDC: 'cdc',
+  WHO: 'who',
+  ECDC: 'ecdc',
+  MANUAL: 'manual',
+  MERGED: 'merged',
+};
+
+const SOURCE_PRIORITY = [SOURCES.ECDC, SOURCES.WHO, SOURCES.CDC, SOURCES.MANUAL];
+
+// ISO 3166-1 alpha-2 mappings for common country names
+const COUNTRY_CODE_MAP = {
+  'united states': 'US',
+  'usa': 'US',
+  'united states of america': 'US',
+  'south korea': 'KR',
+  'korea': 'KR',
+  'republic of korea': 'KR',
+  'japan': 'JP',
+  'argentina': 'AR',
+  'chile': 'CL',
+  'brazil': 'BR',
+  'germany': 'DE',
+  'france': 'FR',
+  'netherlands': 'NL',
+  'spain': 'ES',
+  'switzerland': 'CH',
+  'sweden': 'SE',
+  'finland': 'FI',
+  'russia': 'RU',
+  'china': 'CN',
+  'canada': 'CA',
+  'australia': 'AU',
+  'south africa': 'ZA',
+  'panama': 'PA',
+  'bolivia': 'BO',
+  'paraguay': 'PY',
+  'uruguay': 'UY',
+  'venezuela': 'VE',
+};
+
+// Approximate geographic centers for known regions
+const REGION_COORDINATES = {
+  'new mexico': { lat: 34.5, lng: -106.5 },
+  'colorado': { lat: 39.0, lng: -105.5 },
+  'california': { lat: 37.0, lng: -120.0 },
+  'utah': { lat: 39.3, lng: -111.5 },
+  'wyoming': { lat: 43.0, lng: -107.5 },
+  'arizona': { lat: 34.3, lng: -111.1 },
+  'montana': { lat: 46.9, lng: -110.3 },
+  'nevada': { lat: 39.5, lng: -117.0 },
+  'washington': { lat: 47.4, lng: -120.5 },
+  'oregon': { lat: 44.0, lng: -120.5 },
+  'idaho': { lat: 44.1, lng: -114.5 },
+  'north dakota': { lat: 47.5, lng: -100.3 },
+  'south dakota': { lat: 44.4, lng: -100.2 },
+  'texas': { lat: 31.0, lng: -100.0 },
+  'seoul': { lat: 37.57, lng: 127.0 },
+  'busan': { lat: 35.18, lng: 129.07 },
+  'tokyo': { lat: 35.69, lng: 139.69 },
+  'beijing': { lat: 39.91, lng: 116.39 },
+  'buenos aires': { lat: -34.6, lng: -58.38 },
+  'mendoza': { lat: -32.89, lng: -68.83 },
+  'santiago': { lat: -33.45, lng: -70.67 },
+  'punta arenas': { lat: -53.16, lng: -70.91 },
+  'cape town': { lat: -33.93, lng: 18.42 },
+  'amsterdam': { lat: 52.37, lng: 4.9 },
+  'barcelona': { lat: 41.39, lng: 2.15 },
+  'zurich': { lat: 47.38, lng: 8.54 },
+  'new york': { lat: 40.71, lng: -74.01 },
+  'vancouver': { lat: 49.25, lng: -123.12 },
+  'brisbane': { lat: -27.47, lng: 153.02 },
+};
+
+// Country-level fallback coordinates
+const COUNTRY_COORDINATES = {
+  US: { lat: 39.8, lng: -98.6 },
+  KR: { lat: 37.5, lng: 127.5 },
+  JP: { lat: 36.2, lng: 138.3 },
+  AR: { lat: -38.4, lng: -63.6 },
+  CL: { lat: -35.7, lng: -71.5 },
+  BR: { lat: -14.2, lng: -51.9 },
+  DE: { lat: 51.2, lng: 10.5 },
+  FR: { lat: 46.2, lng: 2.2 },
+  NL: { lat: 52.1, lng: 5.3 },
+  ES: { lat: 40.5, lng: -3.7 },
+  CH: { lat: 47.0, lng: 8.2 },
+  SE: { lat: 60.1, lng: 18.6 },
+  FI: { lat: 61.9, lng: 25.7 },
+  RU: { lat: 61.5, lng: 105.3 },
+  CN: { lat: 35.9, lng: 104.2 },
+  CA: { lat: 56.1, lng: -106.3 },
+  AU: { lat: -25.3, lng: 133.8 },
+  ZA: { lat: -30.6, lng: 22.9 },
+};
+
+const MV_HONDIUS_OUTBREAK = {
+  outbreak_id: 'mv_hondius_2026',
+  name: 'MV Hondius Andes Hantavirus Outbreak',
+  date_reported: '2026-05-02',
+  ship: 'MV Hondius (Dutch-flagged)',
+  confirmed_cases: 8,
+  probable_cases: 2,
+  inconclusive_cases: 1,
+  deaths: 3,
+  strain: 'Andes Virus',
+  origin: 'Argentina (pre-boarding exposure)',
+  status: 'Closed - All passengers evacuated',
+  alert_level: 'high',
+  countries_affected: ['South Africa', 'Netherlands', 'Spain', 'Switzerland', 'USA', 'Canada', 'Australia'],
+  response: 'Medical evacuation, full repatriation, contact tracing by WHO/CDC/ECDC',
+  summary: 'Dutch-flagged cruise ship MV Hondius reported severe respiratory illness cases May 2–4, 2026. Passengers had visited Argentina (where Andes virus is endemic) before boarding. Eight confirmed, two probable, one inconclusive case. Andes virus is the only hantavirus capable of limited human-to-human transmission via close, prolonged contact. WHO assessed risk to global population as LOW.',
+  source_url: 'https://www.ecdc.europa.eu/en/news-events/epidemiological-update-andes-hantavirus-cases-cruise-ship',
+};
+
+module.exports = {
+  STRAINS,
+  SOURCES,
+  SOURCE_PRIORITY,
+  COUNTRY_CODE_MAP,
+  REGION_COORDINATES,
+  COUNTRY_COORDINATES,
+  MV_HONDIUS_OUTBREAK,
+};
