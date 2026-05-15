@@ -14,6 +14,7 @@ const statsRouter = require('./routes/stats');
 const outbreakRouter = require('./routes/outbreak');
 const healthRouter = require('./routes/health');
 const adminRouter = require('./routes/admin');
+const alertsRouter = require('./routes/alerts');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -51,6 +52,7 @@ app.use('/api/stats', statsRouter);
 app.use('/api/outbreak', outbreakRouter);
 app.use('/api/health', healthRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/alerts', alertsRouter);
 
 // 404 catch-all
 app.use((req, res) => {

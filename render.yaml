@@ -23,3 +23,19 @@ services:
         value: "*"
       - key: ADMIN_API_KEY
         generateValue: true
+      # ── Alert email ────────────────────────────────────────────────────────
+      # Set RESEND_API_KEY in the Render dashboard (Environment → Secret Files)
+      # so it is never committed to source control.
+      - key: RESEND_API_KEY
+        sync: false                 # populated manually in the Render dashboard
+      - key: ALERTS_FROM_EMAIL
+        value: Hantaview Alerts <alerts@resend.dev>
+      - key: API_BASE_URL
+        value: https://hantaview-backend.onrender.com
+      - key: DASHBOARD_URL
+        value: https://psych1cparr0t-dev.github.io/hantaview/
+      # DATA_DIR: leave blank to default to ./data (lost on free-tier redeploy).
+      # Mount a Render Persistent Disk at /var/data and set DATA_DIR=/var/data
+      # to retain subscriptions across deploys.
+      - key: DATA_DIR
+        value: ./data

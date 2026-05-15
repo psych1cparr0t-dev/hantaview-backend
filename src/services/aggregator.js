@@ -5,6 +5,7 @@ const { deduplicateCases } = require('../utils/deduplicator');
 const { MV_HONDIUS_OUTBREAK } = require('../config/constants');
 const cache = require('../cache/cacheManager');
 const logger = require('../utils/logger');
+const { runAlertCheck } = require('./alertChecker');
 
 // Per-source status tracking (in-memory, not persisted across restarts)
 const sourceStatus = {
@@ -62,6 +63,12 @@ async function refreshAllCases() {
 
   cache.set(cache.KEYS.CASES, result, cache.TTL.CASES);
   cache.set(cache.KEYS.SOURCE_STATUS, sourceStatus, cache.TTL.SOURCE_STATUS);
+
+  // Run alert checks in the background — don't await so the cache refresh
+  // returns immediately and a mailer failure can't block the data pipeline.
+  runAlertCheck(deduplicated).catch(err => {
+    logger.error({ message: 'Alert check threw unexpectedly', error: err.message });
+  });
 
   return result;
 }
