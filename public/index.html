@@ -290,8 +290,8 @@
 
   /* ── Pulse marker ─────────────────────────────── */
   @keyframes pulse-expand {
-    0%   { transform: scale(0.15); opacity: 0.65; }
-    100% { transform: scale(4);    opacity: 0; }
+    0%   { transform: scale(0.2);  opacity: 0.55; }
+    100% { transform: scale(2.2);  opacity: 0; }
   }
   .leaflet-div-icon { background: none !important; border: none !important; }
 
@@ -606,7 +606,25 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   opacity: 0.8
 }).addTo(map);
 
-const markerGroup = L.markerClusterGroup({ maxClusterRadius: 50 });
+const markerGroup = L.markerClusterGroup({
+  maxClusterRadius: 70,
+  spiderfyOnMaxZoom: true,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: true,
+  iconCreateFunction: function(cluster) {
+    const children = cluster.getAllChildMarkers();
+    const totalCases = children.reduce((s, m) => s + (m.options.caseConfirmed || 1), 0);
+    const hasAndes = children.some(m => m.options.caseStrain === 'andes');
+    const rgb = hasAndes ? '232,90,48' : '32,201,201';
+    const size = Math.min(42 + Math.sqrt(totalCases) * 8, 110);
+    return L.divIcon({
+      html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:radial-gradient(circle,rgba(${rgb},0.58) 0%,rgba(${rgb},0.2) 50%,rgba(${rgb},0) 100%);"></div>`,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+      className: ''
+    });
+  }
+});
 
 let allCases = [];
 
@@ -687,7 +705,9 @@ function createMarker(caseData) {
       iconSize: [22, 22],
       iconAnchor: [11, 11],
       className: ''
-    })
+    }),
+    caseStrain: caseData.strain,
+    caseConfirmed: caseData.confirmed || 1
   });
 
   const strainLabel = STRAIN_LABELS[caseData.strain] || caseData.strain;
