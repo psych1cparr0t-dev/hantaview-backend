@@ -775,7 +775,18 @@ const ZONES_KEY = 'hantaview_alert_zones';
 let savedZones = JSON.parse(localStorage.getItem(ZONES_KEY) || '[]');
 let pendingBounds = null;
 let pendingLayer = null;
+let activeDrawHandler = null;
 const drawnZonesGroup = L.featureGroup().addTo(map);
+
+function cancelDraw() {
+  if (activeDrawHandler) { activeDrawHandler.disable(); activeDrawHandler = null; }
+  const btn = document.getElementById('draw-zone-btn');
+  if (btn) {
+    btn.textContent = pendingBounds ? '↺  Redraw Zone' : '✦  Draw Zone on Map';
+    btn.classList.remove('drawing');
+  }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cancelDraw(); });
 
 function renderZoneList() {
   const el = document.getElementById('zone-list');
@@ -821,12 +832,13 @@ document.getElementById('draw-zone-btn').addEventListener('click', function() {
   if (pendingLayer) { map.removeLayer(pendingLayer); pendingLayer = null; }
   document.getElementById('register-btn').style.display = 'none';
 
-  const handler = new L.Draw.Rectangle(map, {
+  activeDrawHandler = new L.Draw.Rectangle(map, {
     shapeOptions: { color: '#20c9c9', weight: 1.5, fillOpacity: 0.08, dashArray: '5 5' }
   });
-  handler.enable();
+  activeDrawHandler.enable();
 
   map.once(L.Draw.Event.CREATED, function(e) {
+    activeDrawHandler = null;
     pendingLayer = e.layer;
     pendingLayer.addTo(map);
     pendingBounds = e.layer.getBounds();
@@ -836,6 +848,7 @@ document.getElementById('draw-zone-btn').addEventListener('click', function() {
   });
 
   map.once(L.Draw.Event.DRAWSTOP, function() {
+    activeDrawHandler = null;
     if (!pendingBounds) {
       btn.textContent = '✦  Draw Zone on Map';
       btn.classList.remove('drawing');
