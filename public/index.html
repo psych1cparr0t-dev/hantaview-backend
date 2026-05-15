@@ -597,7 +597,7 @@ function createMarker(caseData) {
 
   marker.bindPopup(`
     <div style="color: #e0e0e0; font-family: monospace; font-size: 11px;">
-      <div style="color: ${color}; font-weight: bold;">${caseData.location}, ${caseData.country}</div>
+      <div style="color: ${color}; font-weight: bold;">${caseData.location}</div>
       <div style="margin-top: 4px; color: #888;">
         ${caseData.confirmed} confirmed${caseData.probable > 0 ? `, ${caseData.probable} probable` : ''}<br>
         ${strainLabel}${source}<br>
